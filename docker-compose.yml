@@ -1,0 +1,111 @@
+name: canxp-transit
+
+x-transit: &transit
+  image: canxp-transit:local
+  build: .
+  volumes:
+    - ${NORTHSTAR_CLOCK_DIR:-/home/vince/.local/share/northstar-clock}/public:/northstar-clock:ro
+  restart: unless-stopped
+  init: true
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+x-environment: &environment
+  NORTHSTAR_CLOCK_FILE: ${NORTHSTAR_CLOCK_FILE:-}
+  DATABASE_URL: postgresql+psycopg://transit:${POSTGRES_PASSWORD:?Run python3 scripts/setup.py}@canxp-transit-db-1:5432/transit
+  SIMULATION_SEED: ${SIMULATION_SEED:-42}
+  SIMULATION_START: ${SIMULATION_START:-2026-07-18T08:00:00-03:00}
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: transit
+      POSTGRES_USER: transit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run python3 scripts/setup.py}
+    volumes:
+      - transit_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U transit -d transit"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    <<: *transit
+    environment:
+      <<: *environment
+      TRANSIT_ADMIN_TOKEN: ${TRANSIT_ADMIN_TOKEN:?Run python3 scripts/setup.py}
+      TRANSIT_REPORT_TOKEN: ${TRANSIT_REPORT_TOKEN:?Run python3 scripts/setup.py}
+      TRANSIT_UI_ORIGINS: http://127.0.0.1:${TRANSIT_PORT:-8825},http://localhost:${TRANSIT_PORT:-8825}
+    ports:
+      - "127.0.0.1:${TRANSIT_PORT:-8825}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=10)"]
+      interval: 10s
+      timeout: 12s
+      retries: 12
+      start_period: 60s
+
+  worker:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    <<: *transit
+    command: ["python", "-m", "app.worker"]
+    environment:
+      ENVIRONMENT_API_URL: ${ENVIRONMENT_API_URL-http://host.docker.internal:8865}
+      <<: *environment
+      TICK_SECONDS: ${TICK_SECONDS:-1}
+      COMMAND_API_URL: http://canxp-911-api-1:8000
+      HOSPITAL_API_URL: http://canxp-hospital-api-1:8000
+      COMMAND_DISPATCH_TOKEN: ${COMMAND_DISPATCH_TOKEN:-}
+    networks:
+      - default
+      - command
+      - hospital
+    depends_on:
+      api:
+        condition: service_healthy
+
+  mcp:
+    <<: *transit
+    command: ["python", "-m", "app.mcp_server"]
+    environment:
+      API_BASE_URL: http://api:8000
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8001"
+      MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-}
+    ports:
+      - "127.0.0.1:${MCP_PORT:-8826}:8001"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 10
+
+volumes:
+  transit_data:
+
+networks:
+  command:
+    external: true
+    name: canxp-911_default
+  hospital:
+    external: true
+    name: canxp-hospital_default

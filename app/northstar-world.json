@@ -1,0 +1,3773 @@
+{
+  "schema_version": "1.0",
+  "id": "northstar",
+  "version": "2026.10.03.2",
+  "name": "Northstar Region",
+  "city": "Northstar",
+  "country": "Canada",
+  "description": "Northstar is a fictional Canadian region. All people, facilities, and events are simulated.",
+  "timezone": "America/Moncton",
+  "timezone_label": "Atlantic time",
+  "population": 200000,
+  "demographics": {
+    "version": "2026.10.03.2",
+    "reference_year": 2024,
+    "source": "Statistics Canada 2024 vital statistics (crude birth 8.9 and crude death 8.0 per 1,000 per year, TFR 1.25) with 2021 census age structure. Fictional NorthStar values; all people are simulated.",
+    "age_bands": ["0-19", "20-39", "40-59", "60-79", "80+"],
+    "band_width_years": {"0-19": 20, "20-39": 20, "40-59": 20, "60-79": 20, "80+": null},
+    "age_distribution": {"0-19": 0.215, "20-39": 0.257, "40-59": 0.246, "60-79": 0.237, "80+": 0.045},
+    "male_share_by_band": {"0-19": 0.512, "20-39": 0.505, "40-59": 0.497, "60-79": 0.478, "80+": 0.42},
+    "mortality_per_1000_annual": {"0-19": 0.35, "20-39": 0.8, "40-59": 2.8, "60-79": 13.5, "80+": 82.0},
+    "fertility_per_1000_women_annual": {"0-19": 1.0, "20-39": 62.0, "40-59": 5.5, "60-79": 0.0, "80+": 0.0},
+    "sex_ratio_at_birth_male": 0.512,
+    "deprivation_mortality_sensitivity": 0.35,
+    "deprivation_fertility_sensitivity": 0.35
+  },
+  "coordinate_system": {
+    "id": "northstar-local-v1",
+    "description": "Authored local schematic coordinates; not WGS84 or real-world latitude/longitude. Legacy API lat/lon fields equal local y/x divided by 100.",
+    "x_unit": "schematic kilometre",
+    "y_unit": "schematic kilometre",
+    "legacy_transform": {
+      "lat_subtract": 46,
+      "lon_add": 64.8
+    }
+  },
+  "districts": [
+    {
+      "id": "central",
+      "name": "Central City",
+      "population": 42000,
+      "lat": 0.091,
+      "lon": 0.018,
+      "deprivation": 0.63,
+      "travel_minutes": 9,
+      "primary_care_access": 0.75,
+      "francophone_share": 0.28,
+      "x": 1.8,
+      "y": 9.1,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "north",
+      "name": "North Commons",
+      "population": 34000,
+      "lat": 0.135,
+      "lon": -0.036,
+      "deprivation": 0.28,
+      "travel_minutes": 18,
+      "primary_care_access": 0.85,
+      "francophone_share": 0.3,
+      "x": -3.6,
+      "y": 13.5,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "east",
+      "name": "East River",
+      "population": 28000,
+      "lat": 0.095,
+      "lon": 0.121,
+      "deprivation": 0.25,
+      "travel_minutes": 21,
+      "primary_care_access": 0.83,
+      "francophone_share": 0.72,
+      "x": 12.1,
+      "y": 9.5,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "south",
+      "name": "South Bank",
+      "population": 24000,
+      "lat": 0.055,
+      "lon": -0.014,
+      "deprivation": 0.39,
+      "travel_minutes": 19,
+      "primary_care_access": 0.81,
+      "francophone_share": 0.2,
+      "x": -1.4,
+      "y": 5.5,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "west",
+      "name": "West Industrial",
+      "population": 22000,
+      "lat": 0.101,
+      "lon": -0.107,
+      "deprivation": 0.82,
+      "travel_minutes": 26,
+      "primary_care_access": 0.64,
+      "francophone_share": 0.23,
+      "x": -10.7,
+      "y": 10.1,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "coastal",
+      "name": "Coastal Communities",
+      "population": 18000,
+      "lat": 0.235,
+      "lon": 0.259,
+      "deprivation": 0.47,
+      "travel_minutes": 43,
+      "primary_care_access": 0.75,
+      "francophone_share": 0.77,
+      "x": 25.9,
+      "y": 23.5,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "rural_north",
+      "name": "Northern Rural",
+      "population": 18000,
+      "lat": 0.415,
+      "lon": -0.148,
+      "deprivation": 0.6,
+      "travel_minutes": 64,
+      "primary_care_access": 0.68,
+      "francophone_share": 0.48,
+      "x": -14.8,
+      "y": 41.5,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    },
+    {
+      "id": "rural_south",
+      "name": "Southern Rural",
+      "population": 14000,
+      "lat": -0.132,
+      "lon": -0.182,
+      "deprivation": 0.71,
+      "travel_minutes": 76,
+      "primary_care_access": 0.61,
+      "francophone_share": 0.15,
+      "x": -18.2,
+      "y": -13.2,
+      "city": "Northstar",
+      "region_id": "northstar",
+      "coordinate_system": "northstar-local-v1"
+    }
+  ],
+  "legacy_fire_districts": {
+    "industrial": "west",
+    "rural": "rural_north",
+    "waterfront": "coastal"
+  },
+  "facilities": [
+    {
+      "id": "northstar_regional_hospital",
+      "name": "Northstar Regional Hospital",
+      "kind": "hospital",
+      "district_id": "central",
+      "x": 2.2,
+      "y": 9.3,
+      "address": "100 Health Avenue, Northstar"
+    },
+    {
+      "id": "northstar_airport",
+      "name": "Northstar Regional Airport",
+      "kind": "airport",
+      "district_id": "east",
+      "x": 15.5,
+      "y": 11.5,
+      "address": "1 Aviation Way, Northstar"
+    },
+    {
+      "id": "northstar_rail",
+      "name": "Northstar Rail Interchange",
+      "kind": "rail",
+      "district_id": "west",
+      "x": -11.5,
+      "y": 9.3,
+      "address": "200 Rail Yard Road, Northstar"
+    },
+    {
+      "id": "northstar_harbour",
+      "name": "Northstar Harbour",
+      "kind": "harbour",
+      "district_id": "coastal",
+      "x": 26.5,
+      "y": 22.5,
+      "address": "10 Harbour Way, Northstar"
+    },
+    {
+      "id": "northstar_command",
+      "name": "Northstar 911 Command Centre",
+      "kind": "command",
+      "district_id": "central",
+      "x": 1.1,
+      "y": 9.6,
+      "address": "1 Civic Avenue, Northstar"
+    },
+    {
+      "id": "clinic_primary",
+      "service_id": "primary",
+      "name": "CanXP Community & Urgent Care",
+      "kind": "clinic",
+      "district_id": "central",
+      "x": 1.2,
+      "y": 8.5,
+      "address": "110 Central City Avenue, Northstar"
+    },
+    {
+      "id": "clinic_pediatrics",
+      "service_id": "pediatrics",
+      "name": "Maple Child & Family Clinic",
+      "kind": "clinic",
+      "district_id": "east",
+      "x": 12.1,
+      "y": 10.1,
+      "address": "122 East River Avenue, Northstar"
+    },
+    {
+      "id": "clinic_cardiology",
+      "service_id": "cardiology",
+      "name": "Bayview Heart Clinic",
+      "kind": "clinic",
+      "district_id": "central",
+      "x": 2.4,
+      "y": 8.5,
+      "address": "134 Central City Avenue, Northstar"
+    },
+    {
+      "id": "clinic_endocrinology",
+      "service_id": "endocrinology",
+      "name": "River Metabolic & Thyroid Clinic",
+      "kind": "clinic",
+      "district_id": "east",
+      "x": 11.5,
+      "y": 10.1,
+      "address": "146 East River Avenue, Northstar"
+    },
+    {
+      "id": "clinic_respiratory",
+      "service_id": "respiratory",
+      "name": "Atlantic Lung Clinic",
+      "kind": "clinic",
+      "district_id": "west",
+      "x": -10.7,
+      "y": 9.5,
+      "address": "158 West Industrial Avenue, Northstar"
+    },
+    {
+      "id": "clinic_mental_health",
+      "service_id": "mental_health",
+      "name": "Cedar Mental Health Clinic",
+      "kind": "clinic",
+      "district_id": "north",
+      "x": -3.0,
+      "y": 14.1,
+      "address": "170 North Commons Avenue, Northstar"
+    },
+    {
+      "id": "clinic_geriatrics",
+      "service_id": "geriatrics",
+      "name": "Willow Healthy Aging Clinic",
+      "kind": "clinic",
+      "district_id": "rural_north",
+      "x": -15.4,
+      "y": 40.9,
+      "address": "182 Northern Rural Avenue, Northstar"
+    },
+    {
+      "id": "clinic_nephrology",
+      "service_id": "nephrology",
+      "name": "Atlantic Kidney Clinic",
+      "kind": "clinic",
+      "district_id": "central",
+      "x": 1.8,
+      "y": 9.7,
+      "address": "194 Central City Avenue, Northstar"
+    },
+    {
+      "id": "clinic_gastroenterology",
+      "service_id": "gastroenterology",
+      "name": "Harbour Digestive Health Clinic",
+      "kind": "clinic",
+      "district_id": "coastal",
+      "x": 26.5,
+      "y": 22.9,
+      "address": "206 Coastal Communities Avenue, Northstar"
+    },
+    {
+      "id": "clinic_oncology",
+      "service_id": "oncology",
+      "name": "Meadow Cancer Review Clinic",
+      "kind": "clinic",
+      "district_id": "central",
+      "x": 1.2,
+      "y": 9.7,
+      "address": "218 Central City Avenue, Northstar"
+    },
+    {
+      "id": "clinic_dermatology",
+      "service_id": "dermatology",
+      "name": "Birch Skin Clinic",
+      "kind": "clinic",
+      "district_id": "south",
+      "x": -1.4,
+      "y": 4.9,
+      "address": "230 South Bank Avenue, Northstar"
+    },
+    {
+      "id": "clinic_eye_ent",
+      "service_id": "eye_ent",
+      "name": "Clearview Eye & ENT Clinic",
+      "kind": "clinic",
+      "district_id": "north",
+      "x": -3.0,
+      "y": 14.1,
+      "address": "242 North Commons Avenue, Northstar"
+    },
+    {
+      "id": "clinic_womens_health",
+      "service_id": "womens_health",
+      "name": "Brook Pelvic & Women\u2019s Health Clinic",
+      "kind": "clinic",
+      "district_id": "south",
+      "x": -2.0,
+      "y": 4.9,
+      "address": "254 South Bank Avenue, Northstar"
+    },
+    {
+      "id": "clinic_msk_rehab",
+      "service_id": "msk_rehab",
+      "name": "Forest Movement & Rehabilitation Clinic",
+      "kind": "clinic",
+      "district_id": "rural_south",
+      "x": -18.2,
+      "y": -12.6,
+      "address": "266 Southern Rural Avenue, Northstar"
+    },
+    {
+      "id": "clinic_neurology",
+      "service_id": "neurology",
+      "name": "Summit Neurology Clinic",
+      "kind": "clinic",
+      "district_id": "north",
+      "x": -3.0,
+      "y": 12.9,
+      "address": "278 North Commons Avenue, Northstar"
+    },
+    {
+      "id": "clinic_urology",
+      "service_id": "urology",
+      "name": "Cove Urology Clinic",
+      "kind": "clinic",
+      "district_id": "coastal",
+      "x": 25.3,
+      "y": 24.1,
+      "address": "290 Coastal Communities Avenue, Northstar"
+    },
+    {
+      "id": "fire_station_1",
+      "service_id": "station_1",
+      "name": "Station 1 \u00b7 Central City",
+      "kind": "fire_station",
+      "district_id": "central",
+      "x": 1.8,
+      "y": 9.2,
+      "address": "100 Civic Avenue, Northstar"
+    },
+    {
+      "id": "fire_station_2",
+      "service_id": "station_2",
+      "name": "Station 2 \u00b7 North Commons",
+      "kind": "fire_station",
+      "district_id": "north",
+      "x": -3.6,
+      "y": 13.5,
+      "address": "220 Maple Reach, Northstar"
+    },
+    {
+      "id": "fire_station_3",
+      "service_id": "station_3",
+      "name": "Station 3 \u00b7 East River",
+      "kind": "fire_station",
+      "district_id": "east",
+      "x": 12.1,
+      "y": 9.5,
+      "address": "340 East River Road, Northstar"
+    },
+    {
+      "id": "fire_station_4",
+      "service_id": "station_4",
+      "name": "Station 4 \u00b7 South Bank",
+      "kind": "fire_station",
+      "district_id": "south",
+      "x": -1.4,
+      "y": 5.5,
+      "address": "460 South Bank Way, Northstar"
+    },
+    {
+      "id": "fire_station_5",
+      "service_id": "station_5",
+      "name": "Station 5 \u00b7 West Industrial",
+      "kind": "fire_station",
+      "district_id": "west",
+      "x": -10.7,
+      "y": 10.1,
+      "address": "580 Quarry Drive, Northstar"
+    },
+    {
+      "id": "fire_station_6",
+      "service_id": "station_6",
+      "name": "Station 6 \u00b7 Foundry",
+      "kind": "fire_station",
+      "district_id": "west",
+      "x": -11.2,
+      "y": 9.9,
+      "address": "690 Foundry Street, Northstar"
+    },
+    {
+      "id": "northstar_police",
+      "name": "Northstar Police Headquarters",
+      "kind": "police",
+      "district_id": "central",
+      "x": 1.5,
+      "y": 9.4,
+      "address": "50 Civic Avenue, Northstar"
+    }
+  ],
+  "corridors": [
+    {
+      "id": "orbital_highway",
+      "name": "Northstar Orbital Highway",
+      "kind": "highway",
+      "district_ids": [
+        "rural_south",
+        "south",
+        "central",
+        "north",
+        "rural_north"
+      ]
+    },
+    {
+      "id": "east_connector",
+      "name": "Northstar East Connector",
+      "kind": "road",
+      "district_ids": [
+        "central",
+        "east",
+        "coastal"
+      ]
+    },
+    {
+      "id": "freight_railway",
+      "name": "Northstar Freight Railway",
+      "kind": "rail",
+      "district_ids": [
+        "rural_south",
+        "west",
+        "north",
+        "rural_north"
+      ]
+    }
+  ],
+  "context": {
+    "inspiration": "New Brunswick-inspired healthcare, bilingual English/French population, seasons and operating assumptions. These are modelling references, not claims about real communities.",
+    "languages": [
+      "English",
+      "French"
+    ]
+  },
+  "map": {
+    "bounds": {
+      "min_x": -24,
+      "max_x": 34,
+      "min_y": -22,
+      "max_y": 48
+    },
+    "boundary": [
+      [
+        -21,
+        -16
+      ],
+      [
+        -22,
+        45
+      ],
+      [
+        -9,
+        46
+      ],
+      [
+        4,
+        43
+      ],
+      [
+        13,
+        36
+      ],
+      [
+        30,
+        28
+      ],
+      [
+        32,
+        12
+      ],
+      [
+        24,
+        1
+      ],
+      [
+        14,
+        -6
+      ],
+      [
+        3,
+        -18
+      ],
+      [
+        -9,
+        -20
+      ],
+      [
+        -21,
+        -16
+      ]
+    ],
+    "river": [
+      [
+        -14,
+        30
+      ],
+      [
+        -5,
+        27
+      ],
+      [
+        3,
+        22
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        17,
+        4
+      ],
+      [
+        29,
+        8
+      ]
+    ],
+    "river_name": "Northstar River"
+  },
+  "neighbourhoods": [
+    {
+      "id": "harbour_quarter",
+      "name": "Harbour Quarter",
+      "parent_district_id": "central",
+      "city": "Northstar",
+      "x": 0.8,
+      "y": 8.1
+    },
+    {
+      "id": "cedar_terrace",
+      "name": "Cedar Terrace",
+      "parent_district_id": "central",
+      "city": "Northstar",
+      "x": 2.8,
+      "y": 10.1
+    },
+    {
+      "id": "summit_heights",
+      "name": "Summit Heights",
+      "parent_district_id": "north",
+      "city": "Northstar",
+      "x": -4.6,
+      "y": 14.5
+    },
+    {
+      "id": "meadow_park",
+      "name": "Meadow Park",
+      "parent_district_id": "north",
+      "city": "Northstar",
+      "x": -2.6,
+      "y": 12.5
+    },
+    {
+      "id": "maple_east",
+      "name": "Maple East",
+      "parent_district_id": "east",
+      "city": "Northstar",
+      "x": 11.1,
+      "y": 8.5
+    },
+    {
+      "id": "river_quarter",
+      "name": "River Quarter",
+      "parent_district_id": "east",
+      "city": "Northstar",
+      "x": 13.1,
+      "y": 10.5
+    },
+    {
+      "id": "orchard_gate",
+      "name": "Orchard Gate",
+      "parent_district_id": "east",
+      "city": "Northstar",
+      "x": 14.1,
+      "y": 8.5
+    },
+    {
+      "id": "birch_bank",
+      "name": "Birch Bank",
+      "parent_district_id": "south",
+      "city": "Northstar",
+      "x": -2.4,
+      "y": 4.5
+    },
+    {
+      "id": "valley_green",
+      "name": "Valley Green",
+      "parent_district_id": "south",
+      "city": "Northstar",
+      "x": -0.4,
+      "y": 6.5
+    },
+    {
+      "id": "pine_commons",
+      "name": "Pine Commons",
+      "parent_district_id": "west",
+      "city": "Northstar",
+      "x": -11.7,
+      "y": 9.1
+    },
+    {
+      "id": "cove_landing",
+      "name": "Cove Landing",
+      "parent_district_id": "west",
+      "city": "Northstar",
+      "x": -9.7,
+      "y": 11.1
+    },
+    {
+      "id": "grove_park",
+      "name": "Grove Park",
+      "parent_district_id": "north",
+      "city": "Northstar",
+      "x": -1.6,
+      "y": 14.5
+    },
+    {
+      "id": "elm_crossing",
+      "name": "Elm Crossing",
+      "parent_district_id": "rural_north",
+      "city": "Northstar",
+      "x": -16.8,
+      "y": 43.5
+    },
+    {
+      "id": "lake_hollow",
+      "name": "Lake Hollow",
+      "parent_district_id": "rural_north",
+      "city": "Northstar",
+      "x": -12.8,
+      "y": 39.5
+    },
+    {
+      "id": "ash_ridge",
+      "name": "Ash Ridge",
+      "parent_district_id": "rural_north",
+      "city": "Northstar",
+      "x": -17.8,
+      "y": 38.5
+    },
+    {
+      "id": "fieldstone",
+      "name": "Fieldstone",
+      "parent_district_id": "rural_north",
+      "city": "Northstar",
+      "x": -11.8,
+      "y": 44.5
+    },
+    {
+      "id": "bay_reach",
+      "name": "Bay Reach",
+      "parent_district_id": "coastal",
+      "city": "Northstar",
+      "x": 24.9,
+      "y": 24.5
+    },
+    {
+      "id": "reed_marsh",
+      "name": "Reed Marsh",
+      "parent_district_id": "coastal",
+      "city": "Northstar",
+      "x": 26.9,
+      "y": 22.5
+    },
+    {
+      "id": "willow_bend",
+      "name": "Willow Bend",
+      "parent_district_id": "rural_south",
+      "city": "Northstar",
+      "x": -20.2,
+      "y": -11.2
+    },
+    {
+      "id": "oak_fields",
+      "name": "Oak Fields",
+      "parent_district_id": "rural_south",
+      "city": "Northstar",
+      "x": -16.2,
+      "y": -15.2
+    }
+  ],
+  "legacy_clinic_districts": {
+    "moncton_harbour": "harbour_quarter",
+    "moncton_cedar": "cedar_terrace",
+    "moncton_summit": "summit_heights",
+    "moncton_meadow": "meadow_park",
+    "dieppe_maple": "maple_east",
+    "dieppe_river": "river_quarter",
+    "dieppe_orchard": "orchard_gate",
+    "riverview_birch": "birch_bank",
+    "fredericton_valley": "valley_green",
+    "fredericton_pine": "pine_commons",
+    "saint_john_cove": "cove_landing",
+    "saint_john_grove": "grove_park",
+    "miramichi_elm": "elm_crossing",
+    "bathurst_lake": "lake_hollow",
+    "edmundston_ash": "ash_ridge",
+    "campbellton_field": "fieldstone",
+    "shediac_bay": "bay_reach",
+    "sackville_reed": "reed_marsh",
+    "memramcook_willow": "willow_bend",
+    "salisbury_oak": "oak_fields"
+  },
+  "spatial_reference": {
+    "id": "northstar-local-m-v1",
+    "name": "Northstar fictional engineering grid",
+    "units": "m",
+    "axes": [
+      "x east",
+      "y north"
+    ],
+    "georeferenced": false,
+    "wkt": "LOCAL_CS[\"Northstar fictional engineering grid\",LOCAL_DATUM[\"Northstar authored origin\",0],UNIT[\"metre\",1],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+    "description": "Planar metre coordinates in a fictional engineering grid. No Earth location or EPSG transformation is defined.",
+    "legacy_aliases": {
+      "manifest_x_y": "multiply by 1000",
+      "lat_lon": "x = lon * 100000; y = lat * 100000",
+      "deprecated": true
+    },
+    "precision_types": {
+      "simulated_point": "Authored individual point, not surveyed or observed GPS",
+      "district_centroid": "District representative point; precise location unavailable",
+      "facility": "Shared fixed facility anchor"
+    }
+  },
+  "spatial_layers": {
+    "crs": "northstar-local-m-v1",
+    "units": "m",
+    "region": {
+      "id": "northstar",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -21000,
+              -16000
+            ],
+            [
+              -22000,
+              45000
+            ],
+            [
+              -9000,
+              46000
+            ],
+            [
+              4000,
+              43000
+            ],
+            [
+              13000,
+              36000
+            ],
+            [
+              30000,
+              28000
+            ],
+            [
+              32000,
+              12000
+            ],
+            [
+              24000,
+              1000
+            ],
+            [
+              14000,
+              -6000
+            ],
+            [
+              3000,
+              -18000
+            ],
+            [
+              -9000,
+              -20000
+            ],
+            [
+              -21000,
+              -16000
+            ]
+          ]
+        ]
+      }
+    },
+    "districts": [
+      {
+        "id": "central",
+        "name": "Central City",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -2328.162291,
+                9547.25537
+              ],
+              [
+                6518.744735,
+                20404.823083
+              ],
+              [
+                7271.787709,
+                1013.96648
+              ],
+              [
+                -2328.162291,
+                9547.25537
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "north",
+        "name": "North Commons",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                6033.58209,
+                33593.432836
+              ],
+              [
+                8228.909091,
+                27117.218182
+              ],
+              [
+                6518.744735,
+                20404.823083
+              ],
+              [
+                -2328.162291,
+                9547.25537
+              ],
+              [
+                -5635.656503,
+                8637.694462
+              ],
+              [
+                -13789.243499,
+                25664.3026
+              ],
+              [
+                6033.58209,
+                33593.432836
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "east",
+        "name": "East River",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                28478.06354,
+                7157.337368
+              ],
+              [
+                24000,
+                1000
+              ],
+              [
+                14000,
+                -6000
+              ],
+              [
+                10485.877863,
+                -9833.587786
+              ],
+              [
+                7271.787709,
+                1013.96648
+              ],
+              [
+                6518.744735,
+                20404.823083
+              ],
+              [
+                8228.909091,
+                27117.218182
+              ],
+              [
+                28478.06354,
+                7157.337368
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "south",
+        "name": "South Bank",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -5635.656503,
+                8637.694462
+              ],
+              [
+                -2328.162291,
+                9547.25537
+              ],
+              [
+                7271.787709,
+                1013.96648
+              ],
+              [
+                10485.877863,
+                -9833.587786
+              ],
+              [
+                4332.392473,
+                -16546.480938
+              ],
+              [
+                -11193.250129,
+                -2598.310044
+              ],
+              [
+                -5635.656503,
+                8637.694462
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "west",
+        "name": "West Industrial",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -21272.888669,
+                646.208799
+              ],
+              [
+                -21666.160458,
+                24635.787966
+              ],
+              [
+                -13789.243499,
+                25664.3026
+              ],
+              [
+                -5635.656503,
+                8637.694462
+              ],
+              [
+                -11193.250129,
+                -2598.310044
+              ],
+              [
+                -21272.888669,
+                646.208799
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "coastal",
+        "name": "Coastal Communities",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                8608.500914,
+                39415.6104
+              ],
+              [
+                13000,
+                36000
+              ],
+              [
+                30000,
+                28000
+              ],
+              [
+                32000,
+                12000
+              ],
+              [
+                28478.06354,
+                7157.337368
+              ],
+              [
+                8228.909091,
+                27117.218182
+              ],
+              [
+                6033.58209,
+                33593.432836
+              ],
+              [
+                8608.500914,
+                39415.6104
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "rural_north",
+        "name": "Northern Rural",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -21666.160458,
+                24635.787966
+              ],
+              [
+                -22000,
+                45000
+              ],
+              [
+                -9000,
+                46000
+              ],
+              [
+                4000,
+                43000
+              ],
+              [
+                8608.500914,
+                39415.6104
+              ],
+              [
+                6033.58209,
+                33593.432836
+              ],
+              [
+                -13789.243499,
+                25664.3026
+              ],
+              [
+                -21666.160458,
+                24635.787966
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      },
+      {
+        "id": "rural_south",
+        "name": "Southern Rural",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -21000,
+                -16000
+              ],
+              [
+                -21272.888669,
+                646.208799
+              ],
+              [
+                -11193.250129,
+                -2598.310044
+              ],
+              [
+                4332.392473,
+                -16546.480938
+              ],
+              [
+                3000,
+                -18000
+              ],
+              [
+                -9000,
+                -20000
+              ],
+              [
+                -21000,
+                -16000
+              ]
+            ]
+          ]
+        },
+        "method": "authored nearest-district partition"
+      }
+    ],
+    "road_nodes": [
+      {
+        "id": "n001",
+        "x": 1800.0,
+        "y": 9100.0,
+        "district_id": "central",
+        "place_ids": [
+          "district:central"
+        ]
+      },
+      {
+        "id": "n002",
+        "x": -3600.0,
+        "y": 13500.0,
+        "district_id": "north",
+        "place_ids": [
+          "district:north",
+          "facility:fire_station_2"
+        ]
+      },
+      {
+        "id": "n003",
+        "x": 12100.0,
+        "y": 9500.0,
+        "district_id": "east",
+        "place_ids": [
+          "district:east",
+          "facility:fire_station_3"
+        ]
+      },
+      {
+        "id": "n004",
+        "x": -1400.0,
+        "y": 5500.0,
+        "district_id": "south",
+        "place_ids": [
+          "district:south",
+          "facility:fire_station_4"
+        ]
+      },
+      {
+        "id": "n005",
+        "x": -10700.0,
+        "y": 10100.0,
+        "district_id": "west",
+        "place_ids": [
+          "district:west",
+          "facility:fire_station_5"
+        ]
+      },
+      {
+        "id": "n006",
+        "x": 25900.0,
+        "y": 23500.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "district:coastal"
+        ]
+      },
+      {
+        "id": "n007",
+        "x": -14800.0,
+        "y": 41500.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "district:rural_north"
+        ]
+      },
+      {
+        "id": "n008",
+        "x": -18200.0,
+        "y": -13200.0,
+        "district_id": "rural_south",
+        "place_ids": [
+          "district:rural_south"
+        ]
+      },
+      {
+        "id": "n009",
+        "x": 800.0,
+        "y": 8100.0,
+        "district_id": "central",
+        "place_ids": [
+          "neighbourhood:harbour_quarter"
+        ]
+      },
+      {
+        "id": "n010",
+        "x": 2800.0,
+        "y": 10100.0,
+        "district_id": "central",
+        "place_ids": [
+          "neighbourhood:cedar_terrace"
+        ]
+      },
+      {
+        "id": "n011",
+        "x": -4600.0,
+        "y": 14500.0,
+        "district_id": "north",
+        "place_ids": [
+          "neighbourhood:summit_heights"
+        ]
+      },
+      {
+        "id": "n012",
+        "x": -2600.0,
+        "y": 12500.0,
+        "district_id": "north",
+        "place_ids": [
+          "neighbourhood:meadow_park"
+        ]
+      },
+      {
+        "id": "n013",
+        "x": 11100.0,
+        "y": 8500.0,
+        "district_id": "east",
+        "place_ids": [
+          "neighbourhood:maple_east"
+        ]
+      },
+      {
+        "id": "n014",
+        "x": 13100.0,
+        "y": 10500.0,
+        "district_id": "east",
+        "place_ids": [
+          "neighbourhood:river_quarter"
+        ]
+      },
+      {
+        "id": "n015",
+        "x": 14100.0,
+        "y": 8500.0,
+        "district_id": "east",
+        "place_ids": [
+          "neighbourhood:orchard_gate"
+        ]
+      },
+      {
+        "id": "n016",
+        "x": -2400.0,
+        "y": 4500.0,
+        "district_id": "south",
+        "place_ids": [
+          "neighbourhood:birch_bank"
+        ]
+      },
+      {
+        "id": "n017",
+        "x": -400.0,
+        "y": 6500.0,
+        "district_id": "south",
+        "place_ids": [
+          "neighbourhood:valley_green"
+        ]
+      },
+      {
+        "id": "n018",
+        "x": -11700.0,
+        "y": 9100.0,
+        "district_id": "west",
+        "place_ids": [
+          "neighbourhood:pine_commons"
+        ]
+      },
+      {
+        "id": "n019",
+        "x": -9700.0,
+        "y": 11100.0,
+        "district_id": "west",
+        "place_ids": [
+          "neighbourhood:cove_landing"
+        ]
+      },
+      {
+        "id": "n020",
+        "x": -1600.0,
+        "y": 14500.0,
+        "district_id": "north",
+        "place_ids": [
+          "neighbourhood:grove_park"
+        ]
+      },
+      {
+        "id": "n021",
+        "x": -16800.0,
+        "y": 43500.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "neighbourhood:elm_crossing"
+        ]
+      },
+      {
+        "id": "n022",
+        "x": -12800.0,
+        "y": 39500.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "neighbourhood:lake_hollow"
+        ]
+      },
+      {
+        "id": "n023",
+        "x": -17800.0,
+        "y": 38500.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "neighbourhood:ash_ridge"
+        ]
+      },
+      {
+        "id": "n024",
+        "x": -11800.0,
+        "y": 44500.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "neighbourhood:fieldstone"
+        ]
+      },
+      {
+        "id": "n025",
+        "x": 24900.0,
+        "y": 24500.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "neighbourhood:bay_reach"
+        ]
+      },
+      {
+        "id": "n026",
+        "x": 26900.0,
+        "y": 22500.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "neighbourhood:reed_marsh"
+        ]
+      },
+      {
+        "id": "n027",
+        "x": -20200.0,
+        "y": -11200.0,
+        "district_id": "rural_south",
+        "place_ids": [
+          "neighbourhood:willow_bend"
+        ]
+      },
+      {
+        "id": "n028",
+        "x": -16200.0,
+        "y": -15200.0,
+        "district_id": "rural_south",
+        "place_ids": [
+          "neighbourhood:oak_fields"
+        ]
+      },
+      {
+        "id": "n029",
+        "x": 2200.0,
+        "y": 9300.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:northstar_regional_hospital"
+        ]
+      },
+      {
+        "id": "n030",
+        "x": 15500.0,
+        "y": 11500.0,
+        "district_id": "east",
+        "place_ids": [
+          "facility:northstar_airport"
+        ]
+      },
+      {
+        "id": "n031",
+        "x": -11500.0,
+        "y": 9300.0,
+        "district_id": "west",
+        "place_ids": [
+          "facility:northstar_rail"
+        ]
+      },
+      {
+        "id": "n032",
+        "x": 26500.0,
+        "y": 22500.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "facility:northstar_harbour"
+        ]
+      },
+      {
+        "id": "n033",
+        "x": 1100.0,
+        "y": 9600.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:northstar_command"
+        ]
+      },
+      {
+        "id": "n034",
+        "x": 1200.0,
+        "y": 8500.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:clinic_primary"
+        ]
+      },
+      {
+        "id": "n035",
+        "x": 12100.0,
+        "y": 10100.0,
+        "district_id": "east",
+        "place_ids": [
+          "facility:clinic_pediatrics"
+        ]
+      },
+      {
+        "id": "n036",
+        "x": 2400.0,
+        "y": 8500.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:clinic_cardiology"
+        ]
+      },
+      {
+        "id": "n037",
+        "x": 11500.0,
+        "y": 10100.0,
+        "district_id": "east",
+        "place_ids": [
+          "facility:clinic_endocrinology"
+        ]
+      },
+      {
+        "id": "n038",
+        "x": -10700.0,
+        "y": 9500.0,
+        "district_id": "west",
+        "place_ids": [
+          "facility:clinic_respiratory"
+        ]
+      },
+      {
+        "id": "n039",
+        "x": -3000.0,
+        "y": 14100.0,
+        "district_id": "north",
+        "place_ids": [
+          "facility:clinic_mental_health",
+          "facility:clinic_eye_ent"
+        ]
+      },
+      {
+        "id": "n040",
+        "x": -15400.0,
+        "y": 40900.0,
+        "district_id": "rural_north",
+        "place_ids": [
+          "facility:clinic_geriatrics"
+        ]
+      },
+      {
+        "id": "n041",
+        "x": 1800.0,
+        "y": 9700.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:clinic_nephrology"
+        ]
+      },
+      {
+        "id": "n042",
+        "x": 26500.0,
+        "y": 22900.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "facility:clinic_gastroenterology"
+        ]
+      },
+      {
+        "id": "n043",
+        "x": 1200.0,
+        "y": 9700.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:clinic_oncology"
+        ]
+      },
+      {
+        "id": "n044",
+        "x": -1400.0,
+        "y": 4900.0,
+        "district_id": "south",
+        "place_ids": [
+          "facility:clinic_dermatology"
+        ]
+      },
+      {
+        "id": "n045",
+        "x": -2000.0,
+        "y": 4900.0,
+        "district_id": "south",
+        "place_ids": [
+          "facility:clinic_womens_health"
+        ]
+      },
+      {
+        "id": "n046",
+        "x": -18200.0,
+        "y": -12600.0,
+        "district_id": "rural_south",
+        "place_ids": [
+          "facility:clinic_msk_rehab"
+        ]
+      },
+      {
+        "id": "n047",
+        "x": -3000.0,
+        "y": 12900.0,
+        "district_id": "north",
+        "place_ids": [
+          "facility:clinic_neurology"
+        ]
+      },
+      {
+        "id": "n048",
+        "x": 25300.0,
+        "y": 24100.0,
+        "district_id": "coastal",
+        "place_ids": [
+          "facility:clinic_urology"
+        ]
+      },
+      {
+        "id": "n049",
+        "x": 1800.0,
+        "y": 9200.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:fire_station_1"
+        ]
+      },
+      {
+        "id": "n050",
+        "x": -11200.0,
+        "y": 9900.0,
+        "district_id": "west",
+        "place_ids": [
+          "facility:fire_station_6"
+        ]
+      },
+      {
+        "id": "n051",
+        "x": 1500.0,
+        "y": 9400.0,
+        "district_id": "central",
+        "place_ids": [
+          "facility:northstar_police"
+        ]
+      }
+    ],
+    "roads": [
+      {
+        "id": "road_001",
+        "from": "n001",
+        "to": "n009",
+        "name": "Northstar Link 001",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9100.0
+            ],
+            [
+              800.0,
+              8100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_002",
+        "from": "n001",
+        "to": "n034",
+        "name": "Northstar Link 002",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9100.0
+            ],
+            [
+              1200.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_003",
+        "from": "n001",
+        "to": "n036",
+        "name": "Northstar Link 003",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9100.0
+            ],
+            [
+              2400.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_004",
+        "from": "n001",
+        "to": "n049",
+        "name": "Northstar Link 004",
+        "bidirectional": true,
+        "length_m": 100.0,
+        "speed_kph": 40,
+        "travel_seconds": 9.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9100.0
+            ],
+            [
+              1800.0,
+              9200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_005",
+        "from": "n001",
+        "to": "n051",
+        "name": "Northstar Link 005",
+        "bidirectional": true,
+        "length_m": 424.264,
+        "speed_kph": 40,
+        "travel_seconds": 38.184,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9100.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_006",
+        "from": "n002",
+        "to": "n011",
+        "name": "Northstar Link 006",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -3600.0,
+              13500.0
+            ],
+            [
+              -4600.0,
+              14500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_007",
+        "from": "n002",
+        "to": "n012",
+        "name": "Northstar Link 007",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -3600.0,
+              13500.0
+            ],
+            [
+              -2600.0,
+              12500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_008",
+        "from": "n002",
+        "to": "n039",
+        "name": "Northstar Link 008",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -3600.0,
+              13500.0
+            ],
+            [
+              -3000.0,
+              14100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_009",
+        "from": "n002",
+        "to": "n047",
+        "name": "Northstar Link 009",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -3600.0,
+              13500.0
+            ],
+            [
+              -3000.0,
+              12900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_010",
+        "from": "n003",
+        "to": "n013",
+        "name": "Northstar Link 010",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              9500.0
+            ],
+            [
+              11100.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_011",
+        "from": "n003",
+        "to": "n014",
+        "name": "Northstar Link 011",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              9500.0
+            ],
+            [
+              13100.0,
+              10500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_012",
+        "from": "n003",
+        "to": "n015",
+        "name": "Northstar Link 012",
+        "bidirectional": true,
+        "length_m": 2236.068,
+        "speed_kph": 40,
+        "travel_seconds": 201.246,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              9500.0
+            ],
+            [
+              14100.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_013",
+        "from": "n003",
+        "to": "n035",
+        "name": "Northstar Link 013",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              9500.0
+            ],
+            [
+              12100.0,
+              10100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_014",
+        "from": "n003",
+        "to": "n037",
+        "name": "Northstar Link 014",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              9500.0
+            ],
+            [
+              11500.0,
+              10100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_015",
+        "from": "n004",
+        "to": "n016",
+        "name": "Northstar Link 015",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1400.0,
+              5500.0
+            ],
+            [
+              -2400.0,
+              4500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_016",
+        "from": "n004",
+        "to": "n017",
+        "name": "Northstar Link 016",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1400.0,
+              5500.0
+            ],
+            [
+              -400.0,
+              6500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_017",
+        "from": "n004",
+        "to": "n044",
+        "name": "Northstar Link 017",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1400.0,
+              5500.0
+            ],
+            [
+              -1400.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_018",
+        "from": "n004",
+        "to": "n045",
+        "name": "Northstar Link 018",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1400.0,
+              5500.0
+            ],
+            [
+              -2000.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_019",
+        "from": "n005",
+        "to": "n019",
+        "name": "Northstar Link 019",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -10700.0,
+              10100.0
+            ],
+            [
+              -9700.0,
+              11100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_020",
+        "from": "n005",
+        "to": "n038",
+        "name": "Northstar Link 020",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -10700.0,
+              10100.0
+            ],
+            [
+              -10700.0,
+              9500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_021",
+        "from": "n005",
+        "to": "n050",
+        "name": "Northstar Link 021",
+        "bidirectional": true,
+        "length_m": 538.516,
+        "speed_kph": 40,
+        "travel_seconds": 48.466,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -10700.0,
+              10100.0
+            ],
+            [
+              -11200.0,
+              9900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_022",
+        "from": "n006",
+        "to": "n025",
+        "name": "Northstar Link 022",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              25900.0,
+              23500.0
+            ],
+            [
+              24900.0,
+              24500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_023",
+        "from": "n006",
+        "to": "n026",
+        "name": "Northstar Link 023",
+        "bidirectional": true,
+        "length_m": 1414.214,
+        "speed_kph": 40,
+        "travel_seconds": 127.279,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              25900.0,
+              23500.0
+            ],
+            [
+              26900.0,
+              22500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_024",
+        "from": "n006",
+        "to": "n032",
+        "name": "Northstar Link 024",
+        "bidirectional": true,
+        "length_m": 1166.19,
+        "speed_kph": 40,
+        "travel_seconds": 104.957,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              25900.0,
+              23500.0
+            ],
+            [
+              26500.0,
+              22500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_025",
+        "from": "n006",
+        "to": "n042",
+        "name": "Northstar Link 025",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              25900.0,
+              23500.0
+            ],
+            [
+              26500.0,
+              22900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_026",
+        "from": "n006",
+        "to": "n048",
+        "name": "Northstar Link 026",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              25900.0,
+              23500.0
+            ],
+            [
+              25300.0,
+              24100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_027",
+        "from": "n007",
+        "to": "n021",
+        "name": "Northstar Link 027",
+        "bidirectional": true,
+        "length_m": 2828.427,
+        "speed_kph": 40,
+        "travel_seconds": 254.558,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -14800.0,
+              41500.0
+            ],
+            [
+              -16800.0,
+              43500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_028",
+        "from": "n007",
+        "to": "n022",
+        "name": "Northstar Link 028",
+        "bidirectional": true,
+        "length_m": 2828.427,
+        "speed_kph": 40,
+        "travel_seconds": 254.558,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -14800.0,
+              41500.0
+            ],
+            [
+              -12800.0,
+              39500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_029",
+        "from": "n007",
+        "to": "n023",
+        "name": "Northstar Link 029",
+        "bidirectional": true,
+        "length_m": 4242.641,
+        "speed_kph": 40,
+        "travel_seconds": 381.838,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -14800.0,
+              41500.0
+            ],
+            [
+              -17800.0,
+              38500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_030",
+        "from": "n007",
+        "to": "n024",
+        "name": "Northstar Link 030",
+        "bidirectional": true,
+        "length_m": 4242.641,
+        "speed_kph": 40,
+        "travel_seconds": 381.838,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -14800.0,
+              41500.0
+            ],
+            [
+              -11800.0,
+              44500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_031",
+        "from": "n007",
+        "to": "n040",
+        "name": "Northstar Link 031",
+        "bidirectional": true,
+        "length_m": 848.528,
+        "speed_kph": 40,
+        "travel_seconds": 76.368,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -14800.0,
+              41500.0
+            ],
+            [
+              -15400.0,
+              40900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_032",
+        "from": "n008",
+        "to": "n027",
+        "name": "Northstar Link 032",
+        "bidirectional": true,
+        "length_m": 2828.427,
+        "speed_kph": 40,
+        "travel_seconds": 254.558,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -18200.0,
+              -13200.0
+            ],
+            [
+              -20200.0,
+              -11200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_033",
+        "from": "n008",
+        "to": "n028",
+        "name": "Northstar Link 033",
+        "bidirectional": true,
+        "length_m": 2828.427,
+        "speed_kph": 40,
+        "travel_seconds": 254.558,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -18200.0,
+              -13200.0
+            ],
+            [
+              -16200.0,
+              -15200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_034",
+        "from": "n008",
+        "to": "n046",
+        "name": "Northstar Link 034",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -18200.0,
+              -13200.0
+            ],
+            [
+              -18200.0,
+              -12600.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_035",
+        "from": "n009",
+        "to": "n017",
+        "name": "Northstar Link 035",
+        "bidirectional": true,
+        "length_m": 2000.0,
+        "speed_kph": 40,
+        "travel_seconds": 180.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              800.0,
+              8100.0
+            ],
+            [
+              -400.0,
+              6500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_036",
+        "from": "n009",
+        "to": "n034",
+        "name": "Northstar Link 036",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              800.0,
+              8100.0
+            ],
+            [
+              1200.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_037",
+        "from": "n010",
+        "to": "n013",
+        "name": "Northstar Link 037",
+        "bidirectional": true,
+        "length_m": 8452.81,
+        "speed_kph": 70,
+        "travel_seconds": 434.716,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2800.0,
+              10100.0
+            ],
+            [
+              11100.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_038",
+        "from": "n010",
+        "to": "n029",
+        "name": "Northstar Link 038",
+        "bidirectional": true,
+        "length_m": 1000.0,
+        "speed_kph": 40,
+        "travel_seconds": 90.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2800.0,
+              10100.0
+            ],
+            [
+              2200.0,
+              9300.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_039",
+        "from": "n010",
+        "to": "n041",
+        "name": "Northstar Link 039",
+        "bidirectional": true,
+        "length_m": 1077.033,
+        "speed_kph": 40,
+        "travel_seconds": 96.933,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2800.0,
+              10100.0
+            ],
+            [
+              1800.0,
+              9700.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_040",
+        "from": "n011",
+        "to": "n019",
+        "name": "Northstar Link 040",
+        "bidirectional": true,
+        "length_m": 6129.437,
+        "speed_kph": 70,
+        "travel_seconds": 315.228,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -4600.0,
+              14500.0
+            ],
+            [
+              -9700.0,
+              11100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_041",
+        "from": "n011",
+        "to": "n022",
+        "name": "Northstar Link 041",
+        "bidirectional": true,
+        "length_m": 26310.454,
+        "speed_kph": 70,
+        "travel_seconds": 1353.109,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -4600.0,
+              14500.0
+            ],
+            [
+              -12800.0,
+              39500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_042",
+        "from": "n012",
+        "to": "n020",
+        "name": "Northstar Link 042",
+        "bidirectional": true,
+        "length_m": 2236.068,
+        "speed_kph": 40,
+        "travel_seconds": 201.246,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -2600.0,
+              12500.0
+            ],
+            [
+              -1600.0,
+              14500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_043",
+        "from": "n012",
+        "to": "n033",
+        "name": "Northstar Link 043",
+        "bidirectional": true,
+        "length_m": 4701.064,
+        "speed_kph": 40,
+        "travel_seconds": 423.096,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -2600.0,
+              12500.0
+            ],
+            [
+              1100.0,
+              9600.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_044",
+        "from": "n012",
+        "to": "n047",
+        "name": "Northstar Link 044",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -2600.0,
+              12500.0
+            ],
+            [
+              -3000.0,
+              12900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_045",
+        "from": "n013",
+        "to": "n015",
+        "name": "Northstar Link 045",
+        "bidirectional": true,
+        "length_m": 3000.0,
+        "speed_kph": 40,
+        "travel_seconds": 270.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              11100.0,
+              8500.0
+            ],
+            [
+              14100.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_046",
+        "from": "n013",
+        "to": "n037",
+        "name": "Northstar Link 046",
+        "bidirectional": true,
+        "length_m": 1649.242,
+        "speed_kph": 40,
+        "travel_seconds": 148.432,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              11100.0,
+              8500.0
+            ],
+            [
+              11500.0,
+              10100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_047",
+        "from": "n014",
+        "to": "n015",
+        "name": "Northstar Link 047",
+        "bidirectional": true,
+        "length_m": 2236.068,
+        "speed_kph": 40,
+        "travel_seconds": 201.246,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              13100.0,
+              10500.0
+            ],
+            [
+              14100.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_048",
+        "from": "n014",
+        "to": "n030",
+        "name": "Northstar Link 048",
+        "bidirectional": true,
+        "length_m": 2600.0,
+        "speed_kph": 40,
+        "travel_seconds": 234.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              13100.0,
+              10500.0
+            ],
+            [
+              15500.0,
+              11500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_049",
+        "from": "n014",
+        "to": "n035",
+        "name": "Northstar Link 049",
+        "bidirectional": true,
+        "length_m": 1077.033,
+        "speed_kph": 40,
+        "travel_seconds": 96.933,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              13100.0,
+              10500.0
+            ],
+            [
+              12100.0,
+              10100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_050",
+        "from": "n015",
+        "to": "n030",
+        "name": "Northstar Link 050",
+        "bidirectional": true,
+        "length_m": 3310.589,
+        "speed_kph": 40,
+        "travel_seconds": 297.953,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              14100.0,
+              8500.0
+            ],
+            [
+              15500.0,
+              11500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_051",
+        "from": "n016",
+        "to": "n044",
+        "name": "Northstar Link 051",
+        "bidirectional": true,
+        "length_m": 1077.033,
+        "speed_kph": 40,
+        "travel_seconds": 96.933,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -2400.0,
+              4500.0
+            ],
+            [
+              -1400.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_052",
+        "from": "n016",
+        "to": "n045",
+        "name": "Northstar Link 052",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -2400.0,
+              4500.0
+            ],
+            [
+              -2000.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_053",
+        "from": "n017",
+        "to": "n044",
+        "name": "Northstar Link 053",
+        "bidirectional": true,
+        "length_m": 1886.796,
+        "speed_kph": 40,
+        "travel_seconds": 169.812,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -400.0,
+              6500.0
+            ],
+            [
+              -1400.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_054",
+        "from": "n018",
+        "to": "n027",
+        "name": "Northstar Link 054",
+        "bidirectional": true,
+        "length_m": 22007.726,
+        "speed_kph": 70,
+        "travel_seconds": 1131.826,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11700.0,
+              9100.0
+            ],
+            [
+              -20200.0,
+              -11200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_055",
+        "from": "n018",
+        "to": "n031",
+        "name": "Northstar Link 055",
+        "bidirectional": true,
+        "length_m": 282.843,
+        "speed_kph": 40,
+        "travel_seconds": 25.456,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11700.0,
+              9100.0
+            ],
+            [
+              -11500.0,
+              9300.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_056",
+        "from": "n018",
+        "to": "n050",
+        "name": "Northstar Link 056",
+        "bidirectional": true,
+        "length_m": 943.398,
+        "speed_kph": 40,
+        "travel_seconds": 84.906,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11700.0,
+              9100.0
+            ],
+            [
+              -11200.0,
+              9900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_057",
+        "from": "n019",
+        "to": "n038",
+        "name": "Northstar Link 057",
+        "bidirectional": true,
+        "length_m": 1886.796,
+        "speed_kph": 40,
+        "travel_seconds": 169.812,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -9700.0,
+              11100.0
+            ],
+            [
+              -10700.0,
+              9500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_058",
+        "from": "n020",
+        "to": "n039",
+        "name": "Northstar Link 058",
+        "bidirectional": true,
+        "length_m": 1456.022,
+        "speed_kph": 40,
+        "travel_seconds": 131.042,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1600.0,
+              14500.0
+            ],
+            [
+              -3000.0,
+              14100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_059",
+        "from": "n020",
+        "to": "n047",
+        "name": "Northstar Link 059",
+        "bidirectional": true,
+        "length_m": 2126.029,
+        "speed_kph": 40,
+        "travel_seconds": 191.343,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1600.0,
+              14500.0
+            ],
+            [
+              -3000.0,
+              12900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_060",
+        "from": "n021",
+        "to": "n023",
+        "name": "Northstar Link 060",
+        "bidirectional": true,
+        "length_m": 5099.02,
+        "speed_kph": 70,
+        "travel_seconds": 262.235,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -16800.0,
+              43500.0
+            ],
+            [
+              -17800.0,
+              38500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_061",
+        "from": "n021",
+        "to": "n024",
+        "name": "Northstar Link 061",
+        "bidirectional": true,
+        "length_m": 5099.02,
+        "speed_kph": 70,
+        "travel_seconds": 262.235,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -16800.0,
+              43500.0
+            ],
+            [
+              -11800.0,
+              44500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_062",
+        "from": "n021",
+        "to": "n040",
+        "name": "Northstar Link 062",
+        "bidirectional": true,
+        "length_m": 2952.965,
+        "speed_kph": 40,
+        "travel_seconds": 265.767,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -16800.0,
+              43500.0
+            ],
+            [
+              -15400.0,
+              40900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_063",
+        "from": "n022",
+        "to": "n040",
+        "name": "Northstar Link 063",
+        "bidirectional": true,
+        "length_m": 2952.965,
+        "speed_kph": 40,
+        "travel_seconds": 265.767,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -12800.0,
+              39500.0
+            ],
+            [
+              -15400.0,
+              40900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_064",
+        "from": "n023",
+        "to": "n040",
+        "name": "Northstar Link 064",
+        "bidirectional": true,
+        "length_m": 3394.113,
+        "speed_kph": 40,
+        "travel_seconds": 305.47,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -17800.0,
+              38500.0
+            ],
+            [
+              -15400.0,
+              40900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_065",
+        "from": "n024",
+        "to": "n040",
+        "name": "Northstar Link 065",
+        "bidirectional": true,
+        "length_m": 5091.169,
+        "speed_kph": 70,
+        "travel_seconds": 261.832,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11800.0,
+              44500.0
+            ],
+            [
+              -15400.0,
+              40900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_066",
+        "from": "n025",
+        "to": "n042",
+        "name": "Northstar Link 066",
+        "bidirectional": true,
+        "length_m": 2262.742,
+        "speed_kph": 40,
+        "travel_seconds": 203.647,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              24900.0,
+              24500.0
+            ],
+            [
+              26500.0,
+              22900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_067",
+        "from": "n025",
+        "to": "n048",
+        "name": "Northstar Link 067",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              24900.0,
+              24500.0
+            ],
+            [
+              25300.0,
+              24100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_068",
+        "from": "n026",
+        "to": "n032",
+        "name": "Northstar Link 068",
+        "bidirectional": true,
+        "length_m": 400.0,
+        "speed_kph": 40,
+        "travel_seconds": 36.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              26900.0,
+              22500.0
+            ],
+            [
+              26500.0,
+              22500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_069",
+        "from": "n026",
+        "to": "n042",
+        "name": "Northstar Link 069",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              26900.0,
+              22500.0
+            ],
+            [
+              26500.0,
+              22900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_070",
+        "from": "n027",
+        "to": "n028",
+        "name": "Northstar Link 070",
+        "bidirectional": true,
+        "length_m": 5656.854,
+        "speed_kph": 70,
+        "travel_seconds": 290.924,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -20200.0,
+              -11200.0
+            ],
+            [
+              -16200.0,
+              -15200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_071",
+        "from": "n027",
+        "to": "n046",
+        "name": "Northstar Link 071",
+        "bidirectional": true,
+        "length_m": 2441.311,
+        "speed_kph": 40,
+        "travel_seconds": 219.718,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -20200.0,
+              -11200.0
+            ],
+            [
+              -18200.0,
+              -12600.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_072",
+        "from": "n028",
+        "to": "n046",
+        "name": "Northstar Link 072",
+        "bidirectional": true,
+        "length_m": 3280.244,
+        "speed_kph": 40,
+        "travel_seconds": 295.222,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -16200.0,
+              -15200.0
+            ],
+            [
+              -18200.0,
+              -12600.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_073",
+        "from": "n029",
+        "to": "n036",
+        "name": "Northstar Link 073",
+        "bidirectional": true,
+        "length_m": 824.621,
+        "speed_kph": 40,
+        "travel_seconds": 74.216,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2200.0,
+              9300.0
+            ],
+            [
+              2400.0,
+              8500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_074",
+        "from": "n029",
+        "to": "n041",
+        "name": "Northstar Link 074",
+        "bidirectional": true,
+        "length_m": 565.685,
+        "speed_kph": 40,
+        "travel_seconds": 50.912,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2200.0,
+              9300.0
+            ],
+            [
+              1800.0,
+              9700.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_075",
+        "from": "n029",
+        "to": "n049",
+        "name": "Northstar Link 075",
+        "bidirectional": true,
+        "length_m": 412.311,
+        "speed_kph": 40,
+        "travel_seconds": 37.108,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2200.0,
+              9300.0
+            ],
+            [
+              1800.0,
+              9200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_076",
+        "from": "n030",
+        "to": "n032",
+        "name": "Northstar Link 076",
+        "bidirectional": true,
+        "length_m": 15556.349,
+        "speed_kph": 70,
+        "travel_seconds": 800.041,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              15500.0,
+              11500.0
+            ],
+            [
+              26500.0,
+              22500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_077",
+        "from": "n031",
+        "to": "n038",
+        "name": "Northstar Link 077",
+        "bidirectional": true,
+        "length_m": 824.621,
+        "speed_kph": 40,
+        "travel_seconds": 74.216,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11500.0,
+              9300.0
+            ],
+            [
+              -10700.0,
+              9500.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_078",
+        "from": "n031",
+        "to": "n050",
+        "name": "Northstar Link 078",
+        "bidirectional": true,
+        "length_m": 670.82,
+        "speed_kph": 40,
+        "travel_seconds": 60.374,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -11500.0,
+              9300.0
+            ],
+            [
+              -11200.0,
+              9900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_079",
+        "from": "n032",
+        "to": "n042",
+        "name": "Northstar Link 079",
+        "bidirectional": true,
+        "length_m": 400.0,
+        "speed_kph": 40,
+        "travel_seconds": 36.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              26500.0,
+              22500.0
+            ],
+            [
+              26500.0,
+              22900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_080",
+        "from": "n033",
+        "to": "n043",
+        "name": "Northstar Link 080",
+        "bidirectional": true,
+        "length_m": 141.421,
+        "speed_kph": 40,
+        "travel_seconds": 12.728,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1100.0,
+              9600.0
+            ],
+            [
+              1200.0,
+              9700.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_081",
+        "from": "n033",
+        "to": "n051",
+        "name": "Northstar Link 081",
+        "bidirectional": true,
+        "length_m": 447.214,
+        "speed_kph": 40,
+        "travel_seconds": 40.249,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1100.0,
+              9600.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_082",
+        "from": "n034",
+        "to": "n051",
+        "name": "Northstar Link 082",
+        "bidirectional": true,
+        "length_m": 948.683,
+        "speed_kph": 40,
+        "travel_seconds": 85.381,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1200.0,
+              8500.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_083",
+        "from": "n035",
+        "to": "n037",
+        "name": "Northstar Link 083",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              12100.0,
+              10100.0
+            ],
+            [
+              11500.0,
+              10100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_084",
+        "from": "n036",
+        "to": "n049",
+        "name": "Northstar Link 084",
+        "bidirectional": true,
+        "length_m": 921.954,
+        "speed_kph": 40,
+        "travel_seconds": 82.976,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              2400.0,
+              8500.0
+            ],
+            [
+              1800.0,
+              9200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_085",
+        "from": "n038",
+        "to": "n050",
+        "name": "Northstar Link 085",
+        "bidirectional": true,
+        "length_m": 640.312,
+        "speed_kph": 40,
+        "travel_seconds": 57.628,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -10700.0,
+              9500.0
+            ],
+            [
+              -11200.0,
+              9900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_086",
+        "from": "n039",
+        "to": "n047",
+        "name": "Northstar Link 086",
+        "bidirectional": true,
+        "length_m": 1200.0,
+        "speed_kph": 40,
+        "travel_seconds": 108.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -3000.0,
+              14100.0
+            ],
+            [
+              -3000.0,
+              12900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_087",
+        "from": "n041",
+        "to": "n043",
+        "name": "Northstar Link 087",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9700.0
+            ],
+            [
+              1200.0,
+              9700.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_088",
+        "from": "n041",
+        "to": "n049",
+        "name": "Northstar Link 088",
+        "bidirectional": true,
+        "length_m": 500.0,
+        "speed_kph": 40,
+        "travel_seconds": 45.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9700.0
+            ],
+            [
+              1800.0,
+              9200.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_089",
+        "from": "n041",
+        "to": "n051",
+        "name": "Northstar Link 089",
+        "bidirectional": true,
+        "length_m": 424.264,
+        "speed_kph": 40,
+        "travel_seconds": 38.184,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9700.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_090",
+        "from": "n042",
+        "to": "n048",
+        "name": "Northstar Link 090",
+        "bidirectional": true,
+        "length_m": 1697.056,
+        "speed_kph": 40,
+        "travel_seconds": 152.735,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              26500.0,
+              22900.0
+            ],
+            [
+              25300.0,
+              24100.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_091",
+        "from": "n043",
+        "to": "n051",
+        "name": "Northstar Link 091",
+        "bidirectional": true,
+        "length_m": 424.264,
+        "speed_kph": 40,
+        "travel_seconds": 38.184,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1200.0,
+              9700.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_092",
+        "from": "n044",
+        "to": "n045",
+        "name": "Northstar Link 092",
+        "bidirectional": true,
+        "length_m": 600.0,
+        "speed_kph": 40,
+        "travel_seconds": 54.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -1400.0,
+              4900.0
+            ],
+            [
+              -2000.0,
+              4900.0
+            ]
+          ]
+        }
+      },
+      {
+        "id": "road_093",
+        "from": "n049",
+        "to": "n051",
+        "name": "Northstar Link 093",
+        "bidirectional": true,
+        "length_m": 360.555,
+        "speed_kph": 40,
+        "travel_seconds": 32.45,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              1800.0,
+              9200.0
+            ],
+            [
+              1500.0,
+              9400.0
+            ]
+          ]
+        }
+      }
+    ],
+    "notes": [
+      "District boundaries are an authored nearest-centre partition, not municipal boundaries.",
+      "Road links and speeds are authored for comparative spatial experiments. They do not model real streets, traffic or emergency driving.",
+      "Road junctions are explicit graph nodes. Network routing estimates do not alter existing simulation transition times.",
+      "Location precision distinguishes individual simulated points from district-centre fallbacks."
+    ]
+  }
+}

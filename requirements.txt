@@ -1,0 +1,7 @@
+fastapi==0.141.1
+uvicorn==0.54.0
+SQLAlchemy==2.0.54
+psycopg[binary]==3.3.6
+httpx==0.28.1
+mcp==1.30.0
+pytest==9.1.1
