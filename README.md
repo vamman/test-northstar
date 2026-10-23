@@ -1,4 +1,4 @@
-# Northstar Transit
+# Aurora Cruise Ship Terminals
 
 A persistent mass-transit and smart-city simulator for the fictional Northstar Region. All travelers, schedules, incidents, sensor readings and events are synthetic.
 
