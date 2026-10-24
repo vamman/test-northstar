@@ -95,7 +95,7 @@ def _weighted(terminal, weighted_items):
 
 
 def _group_size(terminal):
-    return GROUP_SIZES[_weighted(terminal, list(zip(GROUP_SIZES, GROUP_SIZE_WEIGHTS)))]
+    return _weighted(terminal, list(zip(GROUP_SIZES, GROUP_SIZE_WEIGHTS)))
 
 
 def _log(terminal, state, kind, text):
@@ -539,12 +539,14 @@ def _at_risk_people(state, terminal, visit):
 def _record_history(state, terminal):
     terminal['last_history_t'] = state['t']
     ashore = sum(group['size'] for group in terminal['groups'])
-    terminal['history'].append({'time': _iso(state['t']), 'ashore_people': ashore,
+    terminal['history'].append({'time': _iso(state['t']), 'time_ts': state['t'], 'ashore_people': ashore,
                                 'customs_queue': sum(group['size'] for group in terminal['groups']
                                                      if group['state'] == 'customs_queue'),
                                 'security_queue': sum(group['size'] for group in terminal['groups']
                                                       if group['state'] == 'security_queue'),
-                                'occupancy_people': sum(_occupancy(terminal, dest) for dest in DESTINATIONS)})
+                                'occupancy_people': sum(_occupancy(terminal, dest) for dest in DESTINATIONS),
+                                'disembarked_total': terminal['totals']['people_disembarked'],
+                                'boarded_total': terminal['totals']['people_boarded']})
     del terminal['history'][:-MAX_HISTORY]
 
 
@@ -575,6 +577,83 @@ def _visit_summary(state, terminal, visit):
             'return_rate_pct': round(100.0 * boarded / completed, 1) if completed else None}
 
 
+def _throughput(state, terminal):
+    """Disembark/boarding rates in people per hour over the recent history window."""
+    history = terminal['history']
+    if len(history) < 2:
+        return {'disembarked_per_hour': None, 'boarded_per_hour': None, 'window_minutes': None}
+    latest = history[-1]
+    earlier = next((row for row in reversed(history) if state['t'] - row['time_ts'] <= 900), history[0])
+    elapsed_minutes = max(1.0, (latest['time_ts'] - earlier['time_ts']) / 60.0)
+    hours = elapsed_minutes / 60.0
+    return {'disembarked_per_hour': round(max(0, latest['disembarked_total'] - earlier['disembarked_total']) / hours),
+            'boarded_per_hour': round(max(0, latest['boarded_total'] - earlier['boarded_total']) / hours),
+            'window_minutes': round(elapsed_minutes)}
+
+
+def _insights(state, terminal, ships, queues, destinations):
+    """Authored operational advisories for port authority dashboards.
+
+    Every insight is derived from the terminal's own simulated state; nothing
+    here is an external measurement or a prediction beyond the model.
+    """
+    config = terminal['config']
+    insights = []
+    active = [ship for ship in ships if ship['status'] != 'departed']
+    for ship in active:
+        minutes_to_departure = max(0, round((visit_departure(state, terminal, ship['id']) - state['t']) / 60)) \
+            if ship['status'] != 'scheduled' else None
+        if ship['status'] == 'holding':
+            insights.append({'severity': 'alert', 'title': f"No berth available — {ship['ship']} holding",
+                             'detail': 'All berths are occupied; the call cannot serve passengers until one frees.'})
+        if ship['status'] == 'boarding' and ship['ashore_people'] > 0:
+            insights.append({'severity': 'alert' if ship['at_risk_people'] > 0 else 'watch',
+                             'title': f"All aboard {ship['ship']} — departs in {minutes_to_departure} min",
+                             'detail': f"{ship['ashore_people']} passengers still ashore, "
+                                       f"{ship['at_risk_people']} at risk of missing departure."})
+        elif ship['at_risk_people'] > 0 and minutes_to_departure is not None and minutes_to_departure <= 90:
+            insights.append({'severity': 'watch', 'title': f"Return risk building for {ship['ship']}",
+                             'detail': f"{ship['at_risk_people']} passengers may not reach boarding in time."})
+    customs_wait = queues['customs_groups'] * config['customs_seconds_per_group'] / max(1, config['customs_lanes']) / 60
+    security_wait = queues['security_groups'] * config['security_seconds_per_group'] / max(1, config['security_lanes']) / 60
+    if customs_wait >= 8:
+        insights.append({'severity': 'alert' if customs_wait >= 15 else 'watch',
+                         'title': f"Customs queue ≈{customs_wait:.0f} min",
+                         'detail': f"{queues['customs_people']} passengers waiting across {config['customs_lanes']} lanes."})
+    if security_wait >= 8:
+        insights.append({'severity': 'alert' if security_wait >= 15 else 'watch',
+                         'title': f"Security queue ≈{security_wait:.0f} min",
+                         'detail': f"{queues['security_people']} passengers waiting across {config['security_lanes']} lanes."})
+    if queues['shuttle_queue_people'] > 2 * max(1, config['shuttle_capacity_people']):
+        insights.append({'severity': 'watch', 'title': 'Shuttle demand exceeds capacity',
+                         'detail': f"{queues['shuttle_queue_people']} passengers waiting; next shuttle {_iso(terminal['next_shuttle_ts'])[11:16]}."})
+    berthed = [ship for ship in active if ship['berth'] is not None]
+    if len(berthed) >= 2:
+        insights.append({'severity': 'info', 'title': f"Multi-ship day — {len(berthed)} vessels in port",
+                         'detail': 'Berth occupancy is at its limit; expect peak terminal and road demand.'})
+    for destination in destinations:
+        if destination['capacity'] and destination['occupancy_people'] / destination['capacity'] >= 0.9:
+            insights.append({'severity': 'watch', 'title': f"{destination['name']} nearing capacity",
+                             'detail': f"{destination['occupancy_people']} of {destination['capacity']} visitor spaces in use."})
+    if not insights:
+        if active:
+            insights.append({'severity': 'info', 'title': 'Terminal operations nominal',
+                             'detail': f"{active[0]['ship']}: no congestion or all-aboard risks detected."})
+        else:
+            next_call = min((visit for visit in terminal['visits'] if visit['status'] == 'scheduled'),
+                            key=lambda visit: visit['arrival_ts'], default=None)
+            insights.append({'severity': 'info', 'title': 'No ship in port',
+                             'detail': f"Next scheduled call: {next_call['ship']} at {next_call['arrival_iso'][11:16]}."
+                             if next_call else 'No cruise calls are scheduled for the visible window.'})
+    order = {'alert': 0, 'watch': 1, 'info': 2}
+    return sorted(insights, key=lambda insight: order[insight['severity']])[:8]
+
+
+def visit_departure(state, terminal, visit_id):
+    visit = _visit_for_id(terminal, visit_id)
+    return visit['departure_ts'] if visit else state['t']
+
+
 def cruise_terminal_summary(state):
     terminal = state.get('cruise_terminal')
     if not terminal:
@@ -600,10 +679,23 @@ def cruise_terminal_summary(state):
     totals = dict(terminal['totals'])
     completed = totals['people_boarded'] + totals['people_missed']
     totals['return_rate_pct'] = round(100.0 * totals['people_boarded'] / completed, 1) if completed else None
+    ships = [_visit_summary(state, terminal, visit) for visit in terminal['visits']]
+    imminent = next((ship for ship in ships if ship['status'] not in ('departed', 'scheduled')), None) \
+        or next((ship for ship in ships if ship['status'] == 'scheduled'), None)
+    all_aboard = None
+    if imminent and imminent['status'] != 'scheduled':
+        visit = _visit_for_id(terminal, imminent['id'])
+        all_aboard = {'ship': imminent['ship'], 'status': imminent['status'], 'berth': imminent['berth'],
+                      'minutes_to_boarding_start': max(0, round((visit['boarding_start_ts'] - state['t']) / 60)),
+                      'minutes_to_departure': max(0, round((visit['departure_ts'] - state['t']) / 60)),
+                      'ashore_people': imminent['ashore_people'], 'boarded_people': imminent['boarded_people'],
+                      'at_risk_people': imminent['at_risk_people']}
     return {'enabled': True, 'port': PORT_PLACE, 'synthetic': True,
             'terminal': 'Northstar Cruise Terminal', 'config': dict(config),
-            'ships': [_visit_summary(state, terminal, visit) for visit in terminal['visits']],
+            'ships': ships,
             'queues': queues, 'destinations': destinations, 'totals': totals,
+            'insights': _insights(state, terminal, ships, queues, destinations),
+            'throughput': _throughput(state, terminal), 'all_aboard': all_aboard,
             'ashore_people': sum(group['size'] for group in groups),
             'suppressed_people': terminal['suppressed_people'],
             'model_scope': 'Group-level terminal operations; a separate bounded layer that must not be added to the traveler sample.'}

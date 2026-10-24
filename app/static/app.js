@@ -51,11 +51,12 @@
     taxi:{label:'Taxi',color:'#e6cb74',icon:'bus'},car:{label:'Road',color:'#d68e79',icon:'bus'},shuttle:{label:'Shuttle',color:'#90c4a5',icon:'bus'}
   };
   const modeInfo = mode => modeStyles[mode]||{label:title(mode),color:'#91a8b9',icon:'bus'};
-  const state = {city:null,basemap:null,operationalPlaceIds:new Set(),cityRevision:null,cityRequestedRevision:null,cityRefreshPromise:null,data:null,integrations:null,token:sessionStorage.getItem('northstar-token')||'',tab:'overview',arrivalFilter:'all',selectedEvent:null,sensors:true,disabledModes:new Set(),previousPeople:new Map(),previousVehicles:new Map(),previousTraffic:new Map(),traffic:true,selectedFacility:null,facilityFilter:'all',receivedAt:0,animationDuration:5000,pollingStarted:false,receivedWallAt:0,integrationReceivedAt:0,sensorHistory:new Map(),selectedRoute:null};
+  const state = {city:null,basemap:null,operationalPlaceIds:new Set(),cityRevision:null,cityRequestedRevision:null,cityRefreshPromise:null,data:null,integrations:null,token:sessionStorage.getItem('northstar-token')||'',tab:'overview',arrivalFilter:'all',selectedEvent:null,sensors:true,disabledModes:new Set(),previousPeople:new Map(),previousVehicles:new Map(),previousTraffic:new Map(),traffic:true,selectedFacility:null,facilityFilter:'all',receivedAt:0,animationDuration:5000,pollingStarted:false,receivedWallAt:0,integrationReceivedAt:0,sensorHistory:new Map(),selectedRoute:null,cruiseLayer:true,cruiseDetail:null,cruiseDetailAt:0};
   const tabs = {
     overview:['City overview','Every journey, connected. Your city at a glance.','Overview'],
     network:['Transit network','Follow the lines that keep Northstar connected.','Transit network'],
     arrivals:['Arrivals & departures','Every gateway. Every arrival. One connected city.','Arrivals & departures'],
+    cruise:['Cruise terminal','Ship calls, passenger flows and all-aboard management at the harbour.','Cruise terminal'],
     events:['City calendar','A year of moments that move the city.','City calendar'],
     utilities:['City utilities','Essential services. Shared infrastructure. A resilient city.','Utilities'],
     sensors:['Smart sensors','The pulse of a connected, responsive city.','Smart sensors'],
@@ -91,6 +92,7 @@
   $('arrival-filters').addEventListener('click',e=>{const button=e.target.closest('[data-filter]');if(!button)return;state.arrivalFilter=button.dataset.filter;document.querySelectorAll('#arrival-filters button').forEach(b=>b.classList.toggle('selected',b===button));renderArrivals();});
   $('commute-date-button').addEventListener('click',()=>{$('start-date').value=(state.data?.clock?.iso||'2026').slice(0,4)+'-09-14';$('date-dialog').showModal();});
   $('traffic-layer').addEventListener('click',()=>{state.traffic=!state.traffic;$('traffic-layer').setAttribute('aria-pressed',state.traffic);$('traffic-layer').innerHTML=svg('car')+`Traffic ${state.traffic?'on':'off'}`;const legend=$('map-legend').querySelector('[data-traffic-toggle]');if(legend)legend.setAttribute('aria-pressed',state.traffic);});
+  $('cruise-layer').addEventListener('click',()=>{state.cruiseLayer=!state.cruiseLayer;$('cruise-layer').setAttribute('aria-pressed',state.cruiseLayer);$('cruise-layer').innerHTML=svg('ship')+`Cruise ${state.cruiseLayer?'on':'off'}`;});
   $('facility-search').addEventListener('input',renderUtilities);
   $('facility-filters').addEventListener('click',event=>{const button=event.target.closest('[data-filter]');if(!button)return;state.facilityFilter=button.dataset.filter;$('facility-filters').querySelectorAll('button').forEach(b=>b.classList.toggle('selected',b===button));renderUtilities();});
   $('facility-list').addEventListener('click',event=>{const button=event.target.closest('[data-facility]');if(!button)return;state.selectedFacility=button.dataset.facility;renderUtilities();});
@@ -183,11 +185,42 @@
   });
 
   function setMetric(id,value){$(id).textContent=fmt(value);}
-  function renderDashboard(){if(!state.controlsReady){['play-pause','speed','date-button','scenario-button'].forEach(id=>$(id).disabled=false);state.controlsReady=true;}const d=state.data,s=d.stats||{};setMetric('metric-people',s.active_people??d.people?.length);setMetric('metric-vehicles',d.vehicles?.length);setMetric('metric-arrivals',s.gateway_people_today??0);setMetric('metric-incidents',s.active_incidents??(d.incidents||[]).filter(i=>i.status!=='resolved').length);$('metric-people-note').textContent=`${fmt(s.moving_people??(d.people||[]).filter(p=>p.status==='moving').length)} moving · ${fmt(s.queued_people??0)} waiting`;$('metric-vehicles-note').textContent=`${(state.city?.routes||[]).length} routes across the region`;$('metric-arrivals-note').textContent='Modeled gateway travelers today';$('metric-incidents-note').textContent=s.active_incidents?'Response coordination active':'Monitoring the transit network';$('nav-incidents').textContent=fmt(s.active_incidents??0);
+  function renderDashboard(){if(!state.controlsReady){['play-pause','speed','date-button','scenario-button'].forEach(id=>$(id).disabled=false);state.controlsReady=true;}const d=state.data,s=d.stats||{};setMetric('metric-people',s.active_people??d.people?.length);setMetric('metric-vehicles',d.vehicles?.length);setMetric('metric-arrivals',s.gateway_people_today??0);setMetric('metric-incidents',s.active_incidents??(d.incidents||[]).filter(i=>i.status!=='resolved').length);$('metric-people-note').textContent=`${fmt(s.moving_people??(d.people||[]).filter(p=>p.status==='moving').length)} moving · ${fmt(s.queued_people??0)} waiting`;$('metric-vehicles-note').textContent=`${(state.city?.routes||[]).length} routes across the region`;$('metric-arrivals-note').textContent='Modeled gateway travelers today';$('metric-incidents-note').textContent=s.active_incidents?'Response coordination active':'Monitoring the transit network';$('nav-incidents').textContent=fmt(s.active_incidents??0);const cruiseSummary=d.cruise_terminal;if(cruiseSummary&&cruiseSummary.enabled){const inPort=(cruiseSummary.ships||[]).filter(ship=>ship.status!=='departed').length;$('nav-cruise').hidden=!inPort;$('nav-cruise').textContent=fmt(inPort);if(state.cruiseLayer&&(state.tab==='overview'||state.tab==='cruise'))fetchCruiseDetail();}
     const clock=d.clock||{};$('map-live-label').innerHTML=`<i></i>${clock.paused?'PAUSED':'LIVE'}`;$('clock-time').textContent=shortTime(clock.iso);$('clock-date').textContent=dateLabel(clock.iso);$('live-badge').innerHTML=`<i></i>${clock.paused?'SIMULATION PAUSED':'LIVE SIMULATION'}`;$('play-pause').innerHTML=svg(clock.paused?'play':'pause');$('play-pause').setAttribute('aria-label',clock.paused?'Resume simulation':'Pause simulation');$('play-pause').title=clock.paused?'Resume simulation':'Pause simulation';if(!$('speed').querySelector(`option[value="${Number(clock.speed)}"]`)){const option=document.createElement('option');option.value=clock.speed;option.textContent=clock.speed+'× speed';$('speed').append(option);}$('speed').value=clock.speed;
     $('map-count').textContent=`${fmt((d.people||[]).length)} travelers · 1 dot = 1 modeled person`;$('map-caption').textContent=`Shared Northstar map ${state.basemap?.version||''} · ${fmt((state.city?.buildings||[]).length)} buildings · ${fmt((state.city?.roads||[]).length)} streets`;$('season-status').textContent=s.cruise_season?'IN SEASON':'OFF SEASON';$('sensor-count').textContent=`${fmt((d.sensors||[]).length)} SENSORS`;
     renderArrivalPreview();renderSensorPreview();renderModes();renderChart();renderTrafficOverview();const infra=d.infrastructure;if(infra){$('utility-disruption-button').disabled=false;const affected=infra.summary?.facilities_affected||0;$('nav-utilities').textContent=affected;$('nav-utilities').hidden=!affected;}const events=d.active_events||[];$('active-event-note').textContent=events.length?`${events[0].name} is shaping city travel${events.length>1?` · ${events.length-1} more active events`:''}`:'Regular city activity · explore the calendar for festivals, sports and seasonal events.';renderCurrentTab();}
-  function renderCurrentTab(){if(!state.city||!state.data)return;({network:renderNetwork,arrivals:renderArrivals,events:renderCalendar,sensors:renderSensors,utilities:renderUtilities,incidents:renderIncidents,connections:renderConnections}[state.tab]||(()=>{}))();}
+  function cruiseStatusPill(status){const labels={scheduled:'Scheduled',holding:'Holding for berth',disembarking:'Disembarking',ashore:'Ashore',boarding:'All aboard',departed:'Departed'};const kind=status==='boarding'?'warning':status==='holding'?'critical':'info';return `<span class="status-pill ${kind}">${labels[status]||title(status)}</span>`;}
+  async function fetchCruiseDetail(){const now=performance.now();if(now-state.cruiseDetailAt<4000)return;state.cruiseDetailAt=now;try{state.cruiseDetail=await api('/api/cruise-terminal');}catch{}if(state.tab==='cruise')renderCruise(true);}
+  function renderCruise(detailOnly=false){const cruise=state.data?.cruise_terminal;if(!cruise)return;
+    if(!cruise.enabled){$('cruise-kpis').innerHTML='<div class="empty-state">Cruise terminal layer not initialized in this run.</div>';return;}
+    if(!detailOnly)fetchCruiseDetail();
+    $('cruise-clock').textContent=shortTime(state.data.clock?.iso);
+    const active=(cruise.ships||[]).filter(ship=>ship.status!=='departed');
+    const berthed=active.filter(ship=>ship.berth!==null).length;
+    const kpis=[['Ships in port',`${berthed}/${cruise.config?.berths??2} berths`,'active calls in the window'],
+      ['Passengers ashore',fmt(cruise.ashore_people??0),'modeled groups exploring the city'],
+      ['Return-to-ship rate',cruise.totals?.return_rate_pct!=null?cruise.totals.return_rate_pct+'%':'—','boarded vs missed so far'],
+      ['All aboard',cruise.all_aboard?`${cruise.all_aboard.minutes_to_departure} min`:'—',cruise.all_aboard?`${cruise.all_aboard.ship} · ${fmt(cruise.all_aboard.ashore_people)} still ashore`:'no active call']];
+    $('cruise-kpis').innerHTML=kpis.map(([label,value,note])=>`<article class="cruise-kpi"><span>${esc(label)}</span><strong>${value}</strong><small>${esc(note)}</small></article>`).join('');
+    $('cruise-insights').innerHTML=(cruise.insights||[]).map(insight=>`<div class="insight-card ${esc(insight.severity)}"><strong>${esc(insight.title)}</strong><p>${esc(insight.detail)}</p></div>`).join('');
+    $('cruise-berth-note').textContent=`${active.length} active call${active.length===1?'':'s'}`;
+    $('cruise-ships').innerHTML=(cruise.ships||[]).map(ship=>{const progress=ship.modeled?Math.min(100,Math.round(ship.disembarked_people/ship.modeled*100)):0;
+      return `<article class="ship-card ${esc(ship.status)}"><div class="ship-head"><strong>${esc(ship.ship)}</strong>${cruiseStatusPill(ship.status)}<span class="berth-pill">${ship.berth?'Berth '+ship.berth:'—'}</span></div>
+      <div class="ship-meta"><span>${esc((ship.arrival_iso||'').slice(11,16))} → ${esc((ship.departure_iso||'').slice(11,16))}</span><span>${fmt(ship.modeled)} modeled / ${fmt(ship.manifest)} manifest</span></div>
+      <div class="queue-bar" aria-label="Disembarkation progress"><i style="width:${progress}%"></i></div>
+      <div class="ship-counts"><span>Ashore <strong>${fmt(ship.ashore_people)}</strong></span><span>Boarded <strong>${fmt(ship.boarded_people)}</strong></span><span>At risk <strong class="${ship.at_risk_people?'risk':''}">${fmt(ship.at_risk_people)}</strong></span><span>Missed <strong class="${ship.missed_people?'risk':''}">${fmt(ship.missed_people)}</strong></span><span>Spend <strong>$${fmt(Math.round(ship.spend))}</strong></span></div>
+      ${ship.note?`<small class="ship-note">${esc(ship.note)}</small>`:''}</article>`;}).join('')||'<div class="empty-state small">No cruise calls in the visible schedule window.</div>';
+    const q=cruise.queues||{};
+    const rows=[['Customs clearance',q.customs_people,q.customs_groups,cruise.config?.customs_lanes],['Security / boarding',q.security_people,q.security_groups,cruise.config?.security_lanes],['Taxi stand',null,q.taxi_queue_groups,null],['Shuttle bay',q.shuttle_queue_people,q.shuttle_queue_groups,null]];
+    $('cruise-queues').innerHTML=rows.map(([label,people,groups,lanes])=>`<div class="queue-row"><span>${esc(label)}${lanes?` <small>${lanes} lanes</small>`:''}</span><strong>${people!=null?fmt(people)+' people · ':''}${fmt(groups||0)} groups</strong></div>`).join('')+`<div class="queue-row"><span>Next shuttle departure</span><strong>${esc((q.next_shuttle_iso||'').slice(11,16)||'—')}</strong></div>`;
+    $('cruise-throughput').textContent=cruise.throughput?.disembarked_per_hour!=null?`≈${fmt(cruise.throughput.disembarked_per_hour)} disembarked/h · ≈${fmt(cruise.throughput.boarded_per_hour||0)} boarded/h`:'';
+    $('cruise-config-note').textContent=`Scenario: ${cruise.config?.berths} berths · ${cruise.config?.customs_lanes} customs lanes · ${cruise.config?.security_lanes} security lanes · ${cruise.config?.shore_minutes} min shore leave · POST /api/cruise-terminal/scenario to change`;
+    $('cruise-destinations').innerHTML=(cruise.destinations||[]).map(destination=>{const pct=destination.capacity?Math.min(100,Math.round(destination.occupancy_people/destination.capacity*100)):0;
+      return `<div class="dest-row"><div class="dest-head"><strong>${esc(destination.name)}</strong><span>${fmt(destination.occupancy_people)} / ${fmt(destination.capacity)} · ${fmt(destination.visitors)} visitors · $${fmt(Math.round(destination.spend))}</span></div><div class="queue-bar ${pct>=90?'hot':''}"><i style="width:${pct}%"></i></div>${destination.waiting_people?`<small>${fmt(destination.waiting_people)} groups waiting for space</small>`:''}</div>`;}).join('');
+    const detail=state.cruiseDetail;
+    $('cruise-events').innerHTML=detail?.events?.length?detail.events.slice(0,14).map(event=>`<div class="event-row"><span class="event-time">${esc((event.time||'').slice(11,16))}</span><span class="event-kind ${esc(event.kind)}">${esc(event.kind)}</span><p>${esc(event.text)}</p></div>`).join(''):'<div class="empty-state small">Events appear as calls proceed.</div>';
+  }
+  function renderCurrentTab(){if(!state.city||!state.data)return;({network:renderNetwork,arrivals:renderArrivals,cruise:renderCruise,events:renderCalendar,sensors:renderSensors,utilities:renderUtilities,incidents:renderIncidents,connections:renderConnections}[state.tab]||(()=>{}))();}
   const placeName = id => state.city?.places?.find(p=>p.id===id)?.name||title(id)||'City network';
   function arrivalIcon(a){return `<span class="arrival-icon ${esc(a.mode)}">${svg(modeInfo(a.mode).icon)}</span>`;}
   function upcomingArrivals(){const all=state.data?.arrivals||[];return [...all].sort((a,b)=>{const rank=s=>['arriving','disembarking'].includes(s)?0:s==='scheduled'?1:2;return rank(a.status)-rank(b.status)||new Date(a.time)-new Date(b.time);});}
@@ -373,6 +406,20 @@
       if(v.mode==='aircraft'){ctx.moveTo(10,0);ctx.lineTo(1,-2);ctx.lineTo(-2,-9);ctx.lineTo(-5,-9);ctx.lineTo(-4,-2);ctx.lineTo(-8,-2);ctx.lineTo(-10,-5);ctx.lineTo(-11,-5);ctx.lineTo(-10,0);ctx.lineTo(-11,5);ctx.lineTo(-10,5);ctx.lineTo(-8,2);ctx.lineTo(-4,2);ctx.lineTo(-5,9);ctx.lineTo(-2,9);ctx.lineTo(1,2);}
       else{ctx.moveTo(12,0);ctx.lineTo(6,-4);ctx.lineTo(-12,-4);ctx.lineTo(-12,4);ctx.lineTo(6,4);}
       ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    }
+    if(state.cruiseLayer&&state.data.cruise_terminal?.enabled){
+      const cruise=state.data.cruise_terminal,detail=state.cruiseDetail;
+      const harbour=state.city.places.find(p=>p.id==='northstar_harbour');
+      if(harbour){const[hx,hy]=screen(harbour.x,harbour.y);
+        for(const ship of cruise.ships||[]){if(ship.status==='departed'||ship.berth===null)continue;
+          const pulse=reducedMotion?.5:(now/1800)%1,alert=ship.status==='boarding'&&ship.at_risk_people>0;
+          ctx.strokeStyle=alert?'#f58280':'#b399e6';ctx.lineWidth=1.4;ctx.globalAlpha=.7*(1-pulse);ctx.beginPath();ctx.arc(hx,hy,14+pulse*16,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;
+          pill(ctx,hx,hy-26,`BERTH ${ship.berth} · ${fmt(ship.ashore_people)} ashore`,alert?'#f58280':'#b399e6');}
+      }
+      for(const group of detail?.groups||[]){const[x,y]=screen(group.x,group.y);if(x<0||y<0||x>map.width||y>map.height)continue;
+        const color=group.state==='customs_queue'||group.state==='security_queue'?'#efb866':group.state==='at_destination'?'#55ddbb':group.state==='overflow_wait'?'#f58280':modeInfo(group.mode).color;
+        ctx.fillStyle=color;ctx.globalAlpha=.85;ctx.beginPath();ctx.arc(x,y,Math.min(3.2,1.6+group.size*.3),0,Math.PI*2);ctx.fill();}
+      ctx.globalAlpha=1;
     }
     for(const i of state.data.incidents||[]){if(['resolved','closed'].includes(i.status))continue;const p=state.city.places.find(p=>p.id===i.place_id),loc=i.location||p;if(!loc)continue;const[x,y]=screen(loc.x,loc.y),pulse=reducedMotion?.5:(now/1600)%1;ctx.strokeStyle='#f1ad65';ctx.lineWidth=1;ctx.globalAlpha=.5*(1-pulse);ctx.beginPath();ctx.arc(x,y,10+pulse*18,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle='#d9944d';ctx.beginPath();ctx.moveTo(x,y-7);ctx.lineTo(x+7,y+6);ctx.lineTo(x-7,y+6);ctx.closePath();ctx.fill();ctx.fillStyle='#10202a';ctx.font='bold 10px Arial';ctx.textAlign='center';ctx.fillText('!',x,y+3);}
   }

@@ -10,6 +10,8 @@ One dot is one modeled traveler in a bounded sample, **not one resident out of t
 
 Road traffic adds weekday work commutes, school-term journeys, homebound afternoon peaks and weekend travel on the existing streets. Road marks represent explicitly weighted vehicle cohorts, separate from individual passenger dots; the dashboard reports both without combining their counts. See [docs/COMMUTING.md](docs/COMMUTING.md) for schedules, representation and limits.
 
+The **Cruise terminal** view models port-side call operations for the seasonal cruise schedule: berthing, customs and security queues, terminal shuttles and taxis, three harbour-area destinations, passenger-group flows on the map, return-to-ship rates, missed departures and port-authority advisories. It follows the shared clock (at the default speed, 1 real second ≈ 1 simulated minute) and is a separate bounded group-level layer that must not be added to the traveler sample. See [docs/CRUISE_TERMINAL.md](docs/CRUISE_TERMINAL.md).
+
 The **Utilities** dashboard tracks transit-facility electricity, elevator queues/trips, internet bandwidth, water and sewer. Loads respond to traveler activity and equipment operations, with capacities, cumulative meters, backup reserves, outages and restoration controls. Existing runs retain their clocks and identities; meters start when the feature is installed. See [docs/INFRASTRUCTURE.md](docs/INFRASTRUCTURE.md) for coefficients and conservation rules.
 
 ## Start and operate
@@ -45,7 +47,7 @@ Feedback polling is scheduled per incident: active checks start at 30 seconds, p
 
 ## API and MCP
 
-Read endpoints: `/api/health`, `/api/world`, `/api/city`, `/api/spatial/layers`, `/api/spatial/route`, `/api/dashboard`, `/api/routes`, `/api/events`, `/api/people`, `/api/vehicles`, `/api/road-traffic`, `/api/arrivals`, `/api/sensors`, `/api/infrastructure`, `/api/infrastructure/facilities/{facility_id}`, `/api/incidents`, `/api/model`, `/api/runs`, `/api/integrations/status`, `/api/integrations/reports`.
+Read endpoints: `/api/health`, `/api/world`, `/api/city`, `/api/spatial/layers`, `/api/spatial/route`, `/api/dashboard`, `/api/routes`, `/api/events`, `/api/people`, `/api/vehicles`, `/api/road-traffic`, `/api/arrivals`, `/api/cruise-terminal`, `/api/sensors`, `/api/infrastructure`, `/api/infrastructure/facilities/{facility_id}`, `/api/incidents`, `/api/model`, `/api/runs`, `/api/integrations/status`, `/api/integrations/reports`.
 
 The read-only MCP service uses the official Python SDK and Streamable HTTP. Connect an MCP client to `http://127.0.0.1:8826/mcp`. Its tools cover status, dashboard, model, world, network, routes, events, arrivals, sensors, infrastructure, facility utilities, road traffic, incidents, paginated travelers and vehicles, integrations, reports and registered office commutes. The MCP process has no database or mutation credentials. Host/origin protections remain enabled. If exposing a service beyond localhost, deliberately design authentication and a trusted proxy first; changing the bind alone is not a deployment configuration.
 

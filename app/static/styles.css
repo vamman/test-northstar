@@ -25,3 +25,25 @@
 .back-home:hover svg{transform:translateX(-3px)}
 .back-home:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 @media(max-width:580px){.back-home{padding:6px 9px 6px 8px}.back-home span{display:none}}
+
+/* ===== Cruise terminal view ===== */
+.cruise-intro{margin:28px 0 23px}.cruise-intro h2{font-size:21px;font-weight:500;letter-spacing:-.5px}.cruise-intro p{color:var(--muted);font-size:12px;max-width:680px;margin-top:7px;line-height:1.7}.cruise-intro .year-mark{font-size:41px;color:#354b5c;font-weight:350;letter-spacing:-2px}
+
+.cruise-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:22px}.cruise-kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:17px 19px 14px}.cruise-kpi span{font-size:8px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim);display:block}.cruise-kpi strong{font-size:26px;font-weight:500;display:block;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}.cruise-kpi small{font-size:9px;color:var(--muted);display:block;margin-top:4px}
+
+.cruise-insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px;margin-bottom:22px}.insight-card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:var(--radius);padding:16px 18px}.insight-card.info{border-left-color:var(--teal)}.insight-card.watch{border-left-color:var(--amber)}.insight-card.alert{border-left-color:var(--red);background:#1a1716}.insight-card strong{font-size:12px;font-weight:550;display:block;margin-bottom:5px}.insight-card p{font-size:10px;color:var(--muted);line-height:1.6;margin:0}
+
+.cruise-layout{display:grid;grid-template-columns:repeat(2,minmax(340px,1fr));gap:18px}
+@media(max-width:900px){.cruise-layout{grid-template-columns:1fr}}
+
+.cruise-ship-list{display:flex;flex-direction:column;gap:10px}.ship-card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:var(--radius);padding:16px 18px}.ship-card.disembarking{border-left-color:var(--violet)}.ship-card.ashore{border-left-color:var(--teal)}.ship-card.boarding{border-left-color:var(--amber)}.ship-card.holding{border-left-color:var(--red)}.ship-card.scheduled{border-left-color:#5a6e7e}.ship-card.departed{opacity:.55}.ship-head{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}.ship-head strong{font-size:13px;font-weight:550}.berth-pill{font-size:8px;padding:2px 7px;background:#2b2940;border:1px solid #3e394f;border-radius:999px;color:var(--violet);letter-spacing:.6px}.ship-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-bottom:8px}.ship-counts{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:6px}.ship-counts span{font-size:9px;color:var(--muted)}.ship-counts span strong{font-weight:500;color:var(--text)}.ship-counts .risk{color:var(--red)}.ship-counts .risk strong{color:var(--red)}.ship-note{font-size:9px;font-style:italic;color:var(--dim)}
+
+.queue-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--subtle-line);font-size:10px}.queue-row span{font-size:9px;color:var(--muted)}.queue-row span small{color:var(--dim);font-size:8px}.queue-row strong{font-size:11px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+
+.queue-bar{height:6px;background:#1c2d38;border-radius:3px;overflow:hidden;margin-top:5px}.queue-bar i{display:block;height:100%;background:var(--violet);border-radius:3px}.queue-bar.hot i{background:var(--red)}
+
+.dest-row{margin-bottom:12px}.dest-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:4px}.dest-head strong{font-size:11px;font-weight:550}.dest-head span{font-size:8px;color:var(--dim)}.dest-row small{font-size:8px;color:var(--dim)}
+
+.cruise-event-list{padding:0}.cruise-event-list .event-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--subtle-line)}.cruise-event-list .event-time{font-family:monospace;font-size:9px;color:var(--dim);min-width:52px;flex:0 0 52px;padding-top:2px}.event-kind{font-size:7px;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:#1a2834;border:1px solid var(--line);color:var(--dim);white-space:nowrap;flex:0 0 auto;padding-top:4px}.event-kind.missed,.event-kind.capacity{background:#312d24;border-color:#554a37;color:var(--amber)}.event-kind.capacity{background:#36282d;border-color:#5f3c3e;color:var(--red)}.cruise-event-list p{flex:1;font-size:10px;color:var(--muted);line-height:1.5;margin:0;padding-top:1px}
+
+.panel-footer-note{font-size:9px;color:var(--dim);padding-top:12px;line-height:1.6}

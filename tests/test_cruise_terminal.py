@@ -96,6 +96,36 @@ class CruiseTerminalTests(unittest.TestCase):
         self.assertEqual(state['cruise_terminal'], restored['cruise_terminal'])
         self.assertEqual(snapshot(state)['cruise_terminal'], snapshot(restored)['cruise_terminal'])
 
+    def test_summary_reports_throughput_all_aboard_and_insights(self):
+        state = create_state(start=START)
+        cruise_terminal.apply_scenario(state, shore_minutes=60, boarding_minutes=20)
+        advance(state, 600)
+        summary = snapshot(state)['cruise_terminal']
+        throughput = summary['throughput']
+        self.assertTrue(set(throughput) == {'disembarked_per_hour', 'boarded_per_hour', 'window_minutes'})
+        self.assertTrue(all(value is None or value >= 0 for value in throughput.values()))
+        self.assertLessEqual(len(summary['insights']), 8)
+        advance(state, 3000)  # 09:00 — first call ashore, boarding not yet open.
+        summary = snapshot(state)['cruise_terminal']
+        self.assertIsNotNone(summary['all_aboard'])
+        self.assertEqual(summary['all_aboard']['ship'], 'MV Aurora Atlantic')
+        self.assertGreaterEqual(summary['all_aboard']['minutes_to_departure'], 0)
+        self.assertGreaterEqual(summary['all_aboard']['minutes_to_boarding_start'], 0)
+        for insight in summary['insights']:
+            self.assertIn(insight['severity'], ('info', 'watch', 'alert'))
+            self.assertTrue(insight['title'] and insight['detail'])
+
+    def test_all_aboard_alert_fires_while_boarding_with_ashore_passengers(self):
+        state = create_state(start=START)
+        cruise_terminal.apply_scenario(state, shore_minutes=60, boarding_minutes=20)
+        advance(state, 600)
+        # Force the boarding window open early to exercise the advisory path.
+        state['cruise_terminal']['visits'][0]['boarding_start_ts'] = state['t'] - 60
+        state['cruise_terminal']['visits'][0]['status'] = 'boarding'
+        summary = snapshot(state)['cruise_terminal']
+        titles = ' '.join(insight['title'] for insight in summary['insights'])
+        self.assertIn('All aboard', titles)
+
     def test_terminal_layer_never_consumes_the_main_rng_stream(self):
         with_terminal = create_state(seed=11, start=START)
         advance(with_terminal, 300)
