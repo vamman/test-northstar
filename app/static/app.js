@@ -53,7 +53,7 @@
   const modeInfo = mode => modeStyles[mode]||{label:title(mode),color:'#91a8b9',icon:'bus'};
   const state = {city:null,basemap:null,operationalPlaceIds:new Set(),cityRevision:null,cityRequestedRevision:null,cityRefreshPromise:null,data:null,integrations:null,token:sessionStorage.getItem('northstar-token')||'',tab:'overview',arrivalFilter:'all',selectedEvent:null,sensors:true,disabledModes:new Set(),previousPeople:new Map(),previousVehicles:new Map(),previousTraffic:new Map(),traffic:true,selectedFacility:null,facilityFilter:'all',receivedAt:0,animationDuration:5000,pollingStarted:false,receivedWallAt:0,integrationReceivedAt:0,sensorHistory:new Map(),selectedRoute:null,cruiseLayer:true,cruiseDetail:null,cruiseDetailAt:0};
   const tabs = {
-    overview:['City overview','Every journey, connected. Your city at a glance.','Overview'],
+    overview:['Cruise operations','Ship calls, passenger flows and the city they move through.','Cruise operations'],
     network:['Transit network','Follow the lines that keep Northstar connected.','Transit network'],
     arrivals:['Arrivals & departures','Every gateway. Every arrival. One connected city.','Arrivals & departures'],
     cruise:['Cruise terminal','Ship calls, passenger flows and all-aboard management at the harbour.','Cruise terminal'],
