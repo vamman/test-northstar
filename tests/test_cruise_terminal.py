@@ -41,8 +41,11 @@ class CruiseTerminalTests(unittest.TestCase):
         summary = snapshot(state)['cruise_terminal']
         self.assertTrue(summary['enabled'])
         self.assertEqual(summary['port'], 'northstar_harbour')
-        self.assertEqual([ship['status'] for ship in summary['ships']], ['scheduled', 'scheduled'])
-        self.assertEqual(summary['ships'][0]['ship'], 'MV Aurora Atlantic')
+        # The engine timetable spans yesterday, today and tomorrow; check today's calls.
+        today = [ship for ship in summary['ships'] if ship['arrival_iso'].startswith('2026-07-18')]
+        self.assertEqual([ship['status'] for ship in today], ['scheduled', 'scheduled'])
+        self.assertEqual(today[0]['ship'], 'MV Aurora Atlantic')
+        self.assertTrue(all(ship['status'] == 'scheduled' for ship in summary['ships']))
         self.assertGreater(summary['ships'][0]['modeled'], 0)
 
     def test_disembarkation_releases_groups_into_queues_and_city(self):
@@ -104,9 +107,10 @@ class CruiseTerminalTests(unittest.TestCase):
         second = state['cruise_terminal']['visits'][1]
         second['arrival_ts'] = state['t'] + 90  # Second call slips to just after the first.
         advance(state, 120)  # 08:03 — first call berths, second finds no free berth.
-        statuses = {ship['ship']: ship['status'] for ship in snapshot(state)['cruise_terminal']['ships']}
-        self.assertEqual(statuses['MV Aurora Atlantic'], 'disembarking')
-        self.assertEqual(statuses['MV Northern Star'], 'holding')
+        # Key by call id: the same ship also has a call on the next day's timetable.
+        statuses = {ship['id']: ship['status'] for ship in snapshot(state)['cruise_terminal']['ships']}
+        self.assertEqual(statuses['2026-07-18:cruise0'], 'disembarking')
+        self.assertEqual(statuses['2026-07-18:cruise1'], 'holding')
 
     def test_reduced_customs_capacity_backs_up_the_queue(self):
         fast = create_state(start=START)

@@ -470,8 +470,11 @@ def test_cruise_terminal_endpoint_reports_scheduled_calls(client):
     body = response.json()
     assert body['enabled'] is True and body['synthetic'] is True
     assert body['port'] == 'northstar_harbour'
-    assert [ship['status'] for ship in body['ships']] == ['scheduled', 'scheduled']
-    assert body['ships'][0]['ship'] == 'MV Aurora Atlantic'
+    # The timetable also lists the next day's calls; check the first day's two.
+    first_day = body['ships'][0]['arrival_iso'][:10]
+    today = [ship for ship in body['ships'] if ship['arrival_iso'].startswith(first_day)]
+    assert [ship['status'] for ship in today] == ['scheduled', 'scheduled']
+    assert today[0]['ship'] == 'MV Aurora Atlantic'
     assert set(body['queues']) >= {'customs_people', 'security_people'}
     assert {destination['id'] for destination in body['destinations']} == \
         {'harbour_market', 'marina', 'coastal_beach'}
