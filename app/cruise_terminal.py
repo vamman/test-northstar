@@ -736,9 +736,11 @@ SCENE_GEOMETRY_NOTE = (
     'grid in metres (x east, y north): scene position is [x, z] with z equal to the model north '
     'coordinate, and size is [width east-west, height, depth north-south]. The layout is authored '
     'around the shared harbour anchor (26500, 22500). Building footprints, heights, pier dimensions '
-    'and ship sizes are illustrative for preview, not surveyed dimensions. Ships appear only when '
-    'the simulator state has a berthed or holding call, and counts in details are modeled terminal '
-    'state; no activity is invented.')
+    'and ship sizes are illustrative for preview, not surveyed dimensions. Destination buildings sit '
+    'at their real shared venue anchors, and cruise_route roads trace the actual street-graph paths '
+    'between the harbour and each destination. The scene contract has no water kind, so the harbour '
+    'channel is not drawn. Ships appear only when the simulator state has a berthed or holding call, '
+    'and counts in details are modeled terminal state; no activity is invented.')
 SCENE_AMENITIES = (
     ('cruise_checkin', 'Check-in & Reception Hall', [26280, 22500], [90, 12, 70],
      'Staffed check-in desks and reception for embarking passengers.'),
@@ -821,8 +823,22 @@ def cruise_terminal_scene(state):
             objects.append(_scene_object('cruise_ship_holding', visit['ship'], 'vehicle',
                                          SCENE_HOLDING_XY, [55, 20, 260],
                                          'Holding outside the harbour; awaiting a free berth.', heading=0.0))
+    for destination_id, destination in DESTINATIONS.items():
+        place = PLACE_INDEX[destination_id]
+        objects.append(_scene_object(
+            f"cruise_destination_{destination_id}", destination['name'], 'building',
+            [place['x'], place['y']], [80, 10, 60],
+            f"City destination at its shared venue anchor; capacity {destination['capacity']} visitors, "
+            f"{_occupancy(terminal, destination_id)} on site now, "
+            f"{terminal['totals']['visitors_by_destination'].get(destination_id, 0)} visitors this run."))
+    roads = [{'id': identifier, 'points': [list(point) for point in points]}
+             for identifier, points in SCENE_ROADS]
+    for destination_id in DESTINATIONS:
+        points, _ = _geometry(destination_id)
+        stride = max(1, len(points) // 60)
+        roads.append({'id': f"cruise_route_{destination_id}",
+                      'points': [[point[0], point[1]] for point in points[::stride]]})
     return {'schema_version': SCENE_CONTRACT, 'units': 'm', 'synthetic': True,
             'geometry_note': SCENE_GEOMETRY_NOTE,
             'objects': objects[:SCENE_OBJECT_LIMIT],
-            'roads': [{'id': identifier, 'points': [list(point) for point in points]}
-                      for identifier, points in SCENE_ROADS]}
+            'roads': roads}

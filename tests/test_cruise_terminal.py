@@ -201,13 +201,34 @@ class CruiseTerminalSceneTests(unittest.TestCase):
             self.assertIsInstance(entry['details'], str)
         identifiers = {entry['id'] for entry in objects}
         for required in ('cruise_terminal_building', 'cruise_checkin', 'cruise_customs',
-                         'cruise_security', 'cruise_lounge', 'cruise_wharf'):
+                         'cruise_security', 'cruise_lounge', 'cruise_wharf',
+                         'cruise_destination_harbour_market', 'cruise_destination_marina',
+                         'cruise_destination_coastal_beach'):
             self.assertIn(required, identifiers)
+        self.assertGreaterEqual(len(scene['roads']), 6)
         for road in scene['roads']:
             self.assertIn('id', road)
             self.assertGreaterEqual(len(road['points']), 2)
             for point in road['points']:
                 self.assertEqual(len(point), 2)
+
+    def test_scene_destinations_sit_at_real_anchors_and_routes_follow_streets(self):
+        from app.catalog import PLACE_INDEX, road_path
+        state = create_state(start=START)
+        advance(state, 600)
+        scene = snapshot(state)['scene']
+        by_id = {entry['id']: entry for entry in scene['objects']}
+        for destination_id in cruise_terminal.DESTINATIONS:
+            place = PLACE_INDEX[destination_id]
+            entry = by_id[f'cruise_destination_{destination_id}']
+            self.assertEqual(entry['position'], [place['x'], place['y']])
+            self.assertIn('capacity', entry['details'])
+            corridor = next(road for road in scene['roads'] if road['id'] == f'cruise_route_{destination_id}')
+            path = road_path(cruise_terminal.PORT_PLACE, destination_id)['points']
+            self.assertEqual(corridor['points'][0], list(path[0]))
+            self.assertEqual(corridor['points'][-1], list(path[-1]))
+            for point in corridor['points']:
+                self.assertIn(point, [list(node) for node in path])
 
     def test_scene_ships_follow_modeled_berth_state(self):
         state = create_state(start=START)
