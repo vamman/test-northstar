@@ -715,3 +715,114 @@ def cruise_terminal_detail(state):
                                    'demand': _demand_multiplier(state)},
                    'active_group_count': len(terminal['groups'])})
     return detail
+
+
+# ---------------------------------------------------------------------------
+# Data-only 3D preview scene (northstar.preview.scene.v1).
+# Coordinates are the shared northstar-local-m-v1 metres (x east, y north);
+# scene position is [x, z] with z equal to the model's north coordinate and
+# size is [width east-west, height, depth north-south]. Footprints, heights
+# and ship dimensions are illustrative for preview, not surveyed dimensions.
+# ---------------------------------------------------------------------------
+SCENE_CONTRACT = 'northstar.preview.scene.v1'
+SCENE_OBJECT_LIMIT = 40
+SCENE_BERTH_Z = {1: 22100, 2: 22500, 3: 22900}
+SCENE_SHIP_SIZES = {1: [60, 22, 280], 2: [55, 20, 260], 3: [50, 18, 240]}
+SCENE_WHARF_X = 26850
+SCENE_HOLDING_XY = [27500, 22500]
+SCENE_STATUS_LABELS = {'disembarking': 'Disembarking', 'ashore': 'Shore leave', 'boarding': 'All aboard'}
+SCENE_GEOMETRY_NOTE = (
+    'Data-only preview scene; no external assets. Coordinates use the shared northstar-local-m-v1 '
+    'grid in metres (x east, y north): scene position is [x, z] with z equal to the model north '
+    'coordinate, and size is [width east-west, height, depth north-south]. The layout is authored '
+    'around the shared harbour anchor (26500, 22500). Building footprints, heights, pier dimensions '
+    'and ship sizes are illustrative for preview, not surveyed dimensions. Ships appear only when '
+    'the simulator state has a berthed or holding call, and counts in details are modeled terminal '
+    'state; no activity is invented.')
+SCENE_AMENITIES = (
+    ('cruise_checkin', 'Check-in & Reception Hall', [26280, 22500], [90, 12, 70],
+     'Staffed check-in desks and reception for embarking passengers.'),
+    ('cruise_customs', 'Customs & Immigration Hall', [26430, 22470], [70, 9, 40],
+     'Arrival control lanes serving disembarking groups.'),
+    ('cruise_security', 'Security Screening', [26430, 22530], [70, 9, 40],
+     'Re-entry screening before the gangway on return.'),
+    ('cruise_baggage', 'Baggage & Porter Services', [26350, 22465], [60, 8, 30],
+     'Baggage claim and porter assistance.'),
+    ('cruise_lounge', 'Waiting Lounge & Gates', [26350, 22535], [60, 8, 30],
+     'Seating, all-aboard announcements and gate access.'),
+    ('cruise_retail', 'Café, Retail & Duty-free', [26260, 22465], [50, 6, 28],
+     'Food, drinks and duty-free shopping.'),
+    ('cruise_info', 'Restrooms & Information Desk', [26260, 22535], [50, 6, 28],
+     'Restrooms, information desk and accessibility services.'),
+)
+SCENE_GANGWAYS = (
+    ('cruise_gangway_north', 'Gangway North', [26655, 22430], [350, 3, 10]),
+    ('cruise_gangway_south', 'Gangway South', [26655, 22570], [350, 3, 10]),
+)
+SCENE_STAGING = (
+    ('cruise_taxi_rank', 'Taxi Rank', [26140, 22430], [90, 3, 70],
+     'Staged taxis serve groups at the modeled dispatch interval.'),
+    ('cruise_shuttle_bay', 'Shuttle Bay', [26140, 22570], [90, 3, 70],
+     'Staged terminal shuttle; capacity and headway come from the scenario config.'),
+)
+SCENE_ROADS = (
+    ('cruise_terminal_access', [[25400, 22500], [25800, 22500], [26100, 22500]]),
+    ('cruise_terminal_forecourt', [[26100, 22430], [26100, 22570]]),
+    ('cruise_wharf_service_lane', [[26480, 22430], [26830, 22430]]),
+)
+
+
+def _scene_object(identifier, label, kind, position, size, details='', heading=None):
+    entry = {'id': identifier, 'label': label, 'kind': kind,
+             'position': [position[0], position[1]], 'size': list(size), 'details': details}
+    if heading is not None:
+        entry['heading'] = round(heading, 4)
+    return entry
+
+
+def cruise_terminal_scene(state):
+    """Bounded data-only preview scene synchronized with the modeled terminal state."""
+    terminal = ensure_cruise_terminal(state)
+    config = terminal['config']
+    objects = [_scene_object('cruise_terminal_building', 'Northstar Cruise Terminal', 'building',
+                             [26350, 22500], [260, 16, 110],
+                             'Terminal building serving all cruise calls; passenger halls listed below.')]
+    for identifier, label, position, size, details in SCENE_AMENITIES:
+        objects.append(_scene_object(identifier, label, 'building', position, size, details))
+    objects.append(_scene_object('cruise_wharf', 'Cruise Wharf', 'dock',
+                                 [SCENE_WHARF_X, 22500], [40, 6, 1100],
+                                 'Main cruise wharf; berths lie along its east side.'))
+    for identifier, label, position, size in SCENE_GANGWAYS:
+        objects.append(_scene_object(identifier, label, 'dock', position, size,
+                                     'Covered gangway between the terminal and the wharf.'))
+    for identifier, label, position, size, details in SCENE_STAGING:
+        objects.append(_scene_object(identifier, label, 'storage', position, size, details))
+    if config['shuttle_capacity_people'] > 0:
+        objects.append(_scene_object('cruise_shuttle_vehicle', 'Terminal Shuttle', 'vehicle',
+                                     [26140, 22570], [12, 3, 2.5],
+                                     'Shuttle staged at the bay (authored layout); capacity '
+                                     f"{config['shuttle_capacity_people']} people every "
+                                     f"{config['shuttle_headway_minutes']} minutes.", heading=0.0))
+    objects.append(_scene_object('cruise_taxi_vehicle', 'Taxi (staged)', 'vehicle',
+                                 [26140, 22430], [5, 1.8, 2],
+                                 f"Taxi staged at the rank (authored layout); one group departs about every "
+                                 f"{config['taxi_interval_seconds']} seconds uncongested.", heading=0.0))
+    for visit in terminal['visits']:
+        if visit['status'] in SCENE_STATUS_LABELS and visit['berth'] is not None:
+            size = SCENE_SHIP_SIZES.get(visit['berth'], [55, 20, 260])
+            position = [SCENE_WHARF_X + 20 + size[0] / 2 + 5, SCENE_BERTH_Z.get(visit['berth'], 22500)]
+            ashore = sum(group['size'] for group in terminal['groups'] if group['visit'] == visit['id'])
+            details = (f"{SCENE_STATUS_LABELS[visit['status']]} at berth {visit['berth']}; "
+                       f"{ashore} passengers ashore, {visit['boarded_people']} aboard, "
+                       f"{visit['missed_people']} missed, departs {_iso(visit['departure_ts'])[11:16]}.")
+            objects.append(_scene_object(f"cruise_ship_berth_{visit['berth']}", visit['ship'], 'vehicle',
+                                         position, size, details, heading=0.0))
+        elif visit['status'] == 'holding':
+            objects.append(_scene_object('cruise_ship_holding', visit['ship'], 'vehicle',
+                                         SCENE_HOLDING_XY, [55, 20, 260],
+                                         'Holding outside the harbour; awaiting a free berth.', heading=0.0))
+    return {'schema_version': SCENE_CONTRACT, 'units': 'm', 'synthetic': True,
+            'geometry_note': SCENE_GEOMETRY_NOTE,
+            'objects': objects[:SCENE_OBJECT_LIMIT],
+            'roads': [{'id': identifier, 'points': [list(point) for point in points]}
+                      for identifier, points in SCENE_ROADS]}

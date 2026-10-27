@@ -957,6 +957,7 @@ def snapshot(state):
             'office_workplaces':state.get('commute_workplaces',[]),'traffic_exposure':state.get('traffic_exposure',{}),
             'road_traffic':road_traffic_snapshot(state),'infrastructure':infrastructure_snapshot(state),
             'cruise_terminal':cruise_terminal.cruise_terminal_summary(state),
+            'scene':cruise_terminal.cruise_terminal_scene(state),
             'history':[dict(row) for row in state['history']],'mode_stats':modes,'active_events':events,
             'model':{'name':'Northstar authored operations model','version':'1.0','sample_cap':state['max_people'],
                      'calibrated':False,'cruise_season':'June–September','time_step_seconds':STEP_SECONDS,

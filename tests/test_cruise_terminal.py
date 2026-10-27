@@ -180,5 +180,65 @@ class CruiseTerminalTests(unittest.TestCase):
         self.assertEqual(with_terminal['rng_state'], reference['rng_state'])
 
 
+class CruiseTerminalSceneTests(unittest.TestCase):
+    def test_scene_contract_fields_and_bounds(self):
+        scene = snapshot(create_state(start=START))['scene']
+        self.assertEqual(scene['schema_version'], 'northstar.preview.scene.v1')
+        self.assertEqual(scene['units'], 'm')
+        self.assertTrue(scene['synthetic'])
+        self.assertIn('illustrative', scene['geometry_note'])
+        self.assertIn('northstar-local-m-v1', scene['geometry_note'])
+        objects = scene['objects']
+        self.assertGreaterEqual(len(objects), 15)
+        self.assertLessEqual(len(objects), 40)
+        identifiers = [entry['id'] for entry in objects]
+        self.assertEqual(len(identifiers), len(set(identifiers)))
+        for entry in objects:
+            self.assertTrue({'id', 'label', 'kind', 'position', 'size', 'details'} <= set(entry))
+            self.assertIn(entry['kind'], ('building', 'storage', 'dock', 'vehicle'))
+            self.assertEqual(len(entry['position']), 2)
+            self.assertEqual(len(entry['size']), 3)
+            self.assertIsInstance(entry['details'], str)
+        identifiers = {entry['id'] for entry in objects}
+        for required in ('cruise_terminal_building', 'cruise_checkin', 'cruise_customs',
+                         'cruise_security', 'cruise_lounge', 'cruise_wharf'):
+            self.assertIn(required, identifiers)
+        for road in scene['roads']:
+            self.assertIn('id', road)
+            self.assertGreaterEqual(len(road['points']), 2)
+            for point in road['points']:
+                self.assertEqual(len(point), 2)
+
+    def test_scene_ships_follow_modeled_berth_state(self):
+        state = create_state(start=START)
+        scene = snapshot(state)['scene']
+        self.assertFalse([entry for entry in scene['objects'] if entry['id'].startswith('cruise_ship')])
+        advance(state, 600)  # 08:10 — first call berthed.
+        scene = snapshot(state)['scene']
+        ships = [entry for entry in scene['objects']
+                 if entry['kind'] == 'vehicle' and entry['id'].startswith('cruise_ship')]
+        self.assertEqual(len(ships), 1)
+        ship = ships[0]
+        self.assertEqual(ship['label'], 'MV Aurora Atlantic')
+        self.assertEqual(ship['id'], 'cruise_ship_berth_1')
+        self.assertIn('heading', ship)
+        self.assertIn('Disembarking', ship['details'])
+        self.assertIn('berth 1', ship['details'])
+        self.assertGreater(ship['position'][0], 26870)  # East of the wharf edge, in the water.
+        # A holding call is shown offshore, not at a berth.
+        state['cruise_terminal']['visits'][1]['status'] = 'holding'
+        scene = snapshot(state)['scene']
+        holding = [entry for entry in scene['objects'] if entry['id'] == 'cruise_ship_holding']
+        self.assertEqual(len(holding), 1)
+        self.assertIn('Holding', holding[0]['details'])
+
+    def test_scene_is_json_safe_and_deterministic(self):
+        state = create_state(seed=3, start=START)
+        advance(state, 300)
+        scene = snapshot(state)['scene']
+        self.assertEqual(json.loads(json.dumps(scene)), scene)
+        self.assertEqual(snapshot(state)['scene'], scene)
+
+
 if __name__ == '__main__':
     unittest.main()
