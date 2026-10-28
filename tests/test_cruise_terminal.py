@@ -183,28 +183,39 @@ class CruiseTerminalTests(unittest.TestCase):
 class CruiseTerminalSceneTests(unittest.TestCase):
     def test_scene_contract_fields_and_bounds(self):
         scene = snapshot(create_state(start=START))['scene']
-        self.assertEqual(scene['schema_version'], 'northstar.preview.scene.v1')
+        self.assertEqual(scene['contract'], 'northstar.preview.scene.v1')
         self.assertEqual(scene['units'], 'm')
         self.assertTrue(scene['synthetic'])
         self.assertIn('illustrative', scene['geometry_note'])
         self.assertIn('northstar-local-m-v1', scene['geometry_note'])
         objects = scene['objects']
-        self.assertGreaterEqual(len(objects), 15)
+        # Halls are furnished rooms of the terminal interior, not separate objects.
+        self.assertGreaterEqual(len(objects), 11)
         self.assertLessEqual(len(objects), 40)
         identifiers = [entry['id'] for entry in objects]
         self.assertEqual(len(identifiers), len(set(identifiers)))
         for entry in objects:
             self.assertTrue({'id', 'label', 'kind', 'position', 'size', 'details'} <= set(entry))
-            self.assertIn(entry['kind'], ('building', 'storage', 'dock', 'vehicle'))
+            self.assertIn(entry['kind'], ('building', 'storage', 'dock', 'vehicle', 'vessel'))
             self.assertEqual(len(entry['position']), 2)
             self.assertEqual(len(entry['size']), 3)
-            self.assertIsInstance(entry['details'], str)
+            rows = entry['details']
+            self.assertIsInstance(rows, list)
+            for row in rows:
+                self.assertTrue({'label', 'value'} <= set(row))
+                self.assertIsInstance(row['label'], str) and self.assertTrue(row['label'])
+        if 'model' in entry:
+            self.assertRegex(entry['model'], r'^[a-z0-9][a-z0-9_-]*$')
         identifiers = {entry['id'] for entry in objects}
-        for required in ('cruise_terminal_building', 'cruise_checkin', 'cruise_customs',
-                         'cruise_security', 'cruise_lounge', 'cruise_wharf',
+        for required in ('cruise_terminal_building', 'cruise_wharf',
                          'cruise_destination_harbour_market', 'cruise_destination_marina',
                          'cruise_destination_coastal_beach'):
             self.assertIn(required, identifiers)
+        terminal = next(entry for entry in objects if entry['id'] == 'cruise_terminal_building')
+        rooms = {room['label'] for room in terminal['interior']['rooms']}
+        for hall in ('Check-in & Reception Hall', 'Customs & Immigration Hall', 'Security Screening',
+                     'Waiting Lounge & Gates', 'Café, Retail & Duty-free'):
+            self.assertIn(hall, rooms)
         self.assertGreaterEqual(len(scene['roads']), 6)
         for road in scene['roads']:
             self.assertIn('id', road)
@@ -222,7 +233,7 @@ class CruiseTerminalSceneTests(unittest.TestCase):
             place = PLACE_INDEX[destination_id]
             entry = by_id[f'cruise_destination_{destination_id}']
             self.assertEqual(entry['position'], [place['x'], place['y']])
-            self.assertIn('capacity', entry['details'])
+            self.assertTrue(any(row['label'] == 'Capacity visitors' for row in entry['details']))
             corridor = next(road for road in scene['roads'] if road['id'] == f'cruise_route_{destination_id}')
             path = road_path(cruise_terminal.PORT_PLACE, destination_id)['points']
             self.assertEqual(corridor['points'][0], list(path[0]))
@@ -237,21 +248,24 @@ class CruiseTerminalSceneTests(unittest.TestCase):
         advance(state, 600)  # 08:10 — first call berthed.
         scene = snapshot(state)['scene']
         ships = [entry for entry in scene['objects']
-                 if entry['kind'] == 'vehicle' and entry['id'].startswith('cruise_ship')]
+                 if entry['kind'] == 'vessel' and entry['id'].startswith('cruise_ship')]
         self.assertEqual(len(ships), 1)
         ship = ships[0]
         self.assertEqual(ship['label'], 'MV Aurora Atlantic')
         self.assertEqual(ship['id'], 'cruise_ship_berth_1')
+        self.assertEqual(ship['model'], 'cruise_ship')
         self.assertIn('heading', ship)
-        self.assertIn('Disembarking', ship['details'])
-        self.assertIn('berth 1', ship['details'])
+        rows = {row['label']: row['value'] for row in ship['details']}
+        self.assertEqual(rows['Status'], 'Disembarking')
+        self.assertEqual(rows['Berth'], 1)
         self.assertGreater(ship['position'][0], 26870)  # East of the wharf edge, in the water.
         # A holding call is shown offshore, not at a berth.
         state['cruise_terminal']['visits'][1]['status'] = 'holding'
         scene = snapshot(state)['scene']
         holding = [entry for entry in scene['objects'] if entry['id'] == 'cruise_ship_holding']
         self.assertEqual(len(holding), 1)
-        self.assertIn('Holding', holding[0]['details'])
+        self.assertEqual({row['label']: row['value'] for row in holding[0]['details']}['Status'],
+                         'Holding outside the harbour')
 
     def test_scene_is_json_safe_and_deterministic(self):
         state = create_state(seed=3, start=START)

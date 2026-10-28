@@ -742,21 +742,16 @@ SCENE_GEOMETRY_NOTE = (
     'channel is not drawn. Ships appear only when the simulator state has a berthed or holding call, '
     'and counts in details are modeled terminal state; no activity is invented.')
 SCENE_AMENITIES = (
-    ('cruise_checkin', 'Check-in & Reception Hall', [26280, 22500], [90, 12, 70],
-     'Staffed check-in desks and reception for embarking passengers.'),
-    ('cruise_customs', 'Customs & Immigration Hall', [26430, 22470], [70, 9, 40],
-     'Arrival control lanes serving disembarking groups.'),
-    ('cruise_security', 'Security Screening', [26430, 22530], [70, 9, 40],
-     'Re-entry screening before the gangway on return.'),
-    ('cruise_baggage', 'Baggage & Porter Services', [26350, 22465], [60, 8, 30],
-     'Baggage claim and porter assistance.'),
-    ('cruise_lounge', 'Waiting Lounge & Gates', [26350, 22535], [60, 8, 30],
-     'Seating, all-aboard announcements and gate access.'),
-    ('cruise_retail', 'Café, Retail & Duty-free', [26260, 22465], [50, 6, 28],
-     'Food, drinks and duty-free shopping.'),
-    ('cruise_info', 'Restrooms & Information Desk', [26260, 22535], [50, 6, 28],
-     'Restrooms, information desk and accessibility services.'),
+    ('cruise_checkin', 'Check-in & Reception Hall', 'Check-in & Reception Hall'),
+    ('cruise_customs', 'Customs & Immigration Hall', 'Customs & Immigration Hall'),
+    ('cruise_security', 'Security Screening', 'Security Screening'),
+    ('cruise_baggage', 'Baggage & Porter Services', 'Baggage & Porter Services'),
+    ('cruise_lounge', 'Waiting Lounge & Gates', 'Waiting Lounge & Gates'),
+    ('cruise_retail', 'Café, Retail & Duty-free', 'Café, Retail & Duty-free'),
+    ('cruise_info', 'Restrooms & Information Desk', 'Restrooms & Information Desk'),
 )
+"""Passenger halls, drawn as furnished rooms of the walkable terminal interior
+(rather than separate solid boxes, which would seal the walkable rooms off)."""
 SCENE_GANGWAYS = (
     ('cruise_gangway_north', 'Gangway North', [26655, 22430], [350, 3, 10]),
     ('cruise_gangway_south', 'Gangway South', [26655, 22570], [350, 3, 10]),
@@ -767,6 +762,94 @@ SCENE_STAGING = (
     ('cruise_shuttle_bay', 'Shuttle Bay', [26140, 22570], [90, 3, 70],
      'Staged terminal shuttle; capacity and headway come from the scenario config.'),
 )
+# Terminal interior, building-local metres (origin at the footprint centre,
+# x across width, z across depth): halls along the passenger flow from the landside
+# entrance (west) to the gangways (east). Rooms keep a 4 m circulation margin.
+SCENE_HALLS = (
+    ('checkin', 'Check-in & Reception Hall', (-130, -60, -55, 55)),
+    ('baggage', 'Baggage & Porter Services', (-60, -20, -55, -5)),
+    ('security', 'Security Screening', (-60, -20, -5, 55)),
+    ('customs', 'Customs & Immigration Hall', (-20, 30, -55, -5)),
+    ('retail', 'Café, Retail & Duty-free', (-20, 30, -5, 55)),
+    ('lounge', 'Waiting Lounge & Gates', (30, 130, -55, 30)),
+    ('info', 'Restrooms & Information Desk', (30, 130, 30, 55)),
+)
+SCENE_INTERIOR = {
+    'floors': [{'id': 'ground', 'elevation': 0, 'height': 8}],
+    'rooms': [{'id': key, 'label': label, 'floor': 'ground',
+               'outline': [[x0, z0], [x1, z0], [x1, z1], [x0, z1]]}
+              for key, label, (x0, x1, z0, z1) in SCENE_HALLS],
+    'doors': [
+        {'id': 'main_entrance', 'floor': 'ground', 'position': [-130, 0], 'width': 6},
+        {'id': 'west_exit_north', 'floor': 'ground', 'position': [-130, 30], 'width': 4},
+        {'id': 'west_exit_south', 'floor': 'ground', 'position': [-130, -30], 'width': 4},
+        {'id': 'checkin_baggage', 'floor': 'ground', 'position': [-60, -30], 'width': 3},
+        {'id': 'checkin_security', 'floor': 'ground', 'position': [-60, 25], 'width': 3},
+        {'id': 'security_customs', 'floor': 'ground', 'position': [-20, -30], 'width': 3},
+        {'id': 'security_retail', 'floor': 'ground', 'position': [-20, 25], 'width': 3},
+        {'id': 'customs_lounge', 'floor': 'ground', 'position': [30, -30], 'width': 3},
+        {'id': 'retail_lounge', 'floor': 'ground', 'position': [30, 15], 'width': 3},
+        {'id': 'lounge_info', 'floor': 'ground', 'position': [80, 30], 'width': 2.4},
+        {'id': 'gangway_north_exit', 'floor': 'ground', 'position': [130, -20], 'width': 4},
+        {'id': 'gangway_south_exit', 'floor': 'ground', 'position': [130, 10], 'width': 4},
+    ],
+}
+
+def _rows(**rows):
+    """Detail rows; plain labels keep the modeled state readable."""
+    return [{'label': label.replace('_', ' ').capitalize(), 'value': value}
+            for label, value in rows.items()]
+
+def _hall_props(config):
+    """Library furniture for each hall, sized for the modeled passenger flow."""
+    props = []
+    def add(prop_type, x, z, heading=0.0, size=None, label=''):
+        entry = {'id': f'{prop_type}_{len(props)}', 'type': prop_type, 'floor': 'ground',
+                 'position': [x, z], 'heading': heading, 'label': label}
+        if size:
+            entry['size'] = list(size)
+        props.append(entry)
+    for z in range(-40, 50, 12):            # Check-in: staffed desks along the hall.
+        add('counter', -80, z, 1.5708, [8, 1.1, 1.2])
+    for z in (-45, 45):                     # Self-service kiosks at the hall ends.
+        add('kiosk', -120, z); add('kiosk', -116, z)
+    for z in range(-20, 25, 10):            # landside seating before security.
+        add('seating', -108, z, 0.0, [8, 0.85, 0.7])
+    for z in (5, 20, 35):                   # Security: walk-through arch then X-ray.
+        add('scanner', -40, z, 1.5708, [4, 1.8, 1.4])
+        add('arch', -46, z, 1.5708, [1.2, 2.3, 0.6])
+    for z in (0, 12, 28, 42):               # Queue barriers feed the lanes.
+        add('barrier', -54, z, 0.0, [8, 1, 0.1])
+    for x in (-10, 0, 10, 20):              # Customs: control desks.
+        add('counter', x, -25, 0.0, [3, 1.1, 1])
+    for x in (-10, 5, 20):
+        add('barrier', x, -40, 0.0, [6, 1, 0.1])
+    add('carousel', -40, -32, 1.5708, [16, 0.6, 3])   # Baggage belts.
+    add('carousel', -40, -15, 1.5708, [6, 0.6, 2.4])
+    for x in range(-15, 30, 9):             # Duty-free shelving along retail.
+        add('shelf', x, 48, 0.0, [6, 2, 0.6])
+    for x in range(-12, 26, 7):             # Café tables with chairs.
+        add('table', x, 15)
+        add('chair', x - 1, 15, 1.5708)
+        add('chair', x + 1, 15, -1.5708)
+    add('vending', 25, 2)
+    add('counter', 5, 32, 0.0, [10, 1.1, 1])          # Info desk.
+    for z in range(-48, 26, 9):             # Lounge seating banks before the gates.
+        for x in (50, 72, 94):
+            add('seating', x, z, 3.1416, [14, 0.85, 0.7])
+    for z in (-20, 10):                     # Gate podiums with overhead signs.
+        add('gate', 120, z, -1.5708)
+        add('sign', 124, z, -1.5708, [4, 0.6, 0.1])
+    for x in (60, 90):                      # Departure screens over the lounge.
+        add('screen', x, 28, 0.0, [4, 1.6, 0.1])
+    for x in (40, 70, 100, 120):            # Structural columns.
+        add('column', x, -5, 0.0, [0.9, 8, 0.9])
+    add('counter', 110, 42, 0.0, [8, 1.1, 1.2])       # Restroom washroom counter.
+    for x in (45, 55, 65):
+        add('locker', x, 52, 3.1416, [2, 2, 0.6])
+    add('plant', 36, 50); add('plant', 126, 50)
+    return props
+
 SCENE_ROADS = (
     ('cruise_terminal_access', [[25400, 22500], [25800, 22500], [26100, 22500]]),
     ('cruise_terminal_forecourt', [[26100, 22430], [26100, 22570]]),
@@ -774,11 +857,15 @@ SCENE_ROADS = (
 )
 
 
-def _scene_object(identifier, label, kind, position, size, details='', heading=None):
+def _scene_object(identifier, label, kind, position, size, details='', heading=None, model=None, interior=None):
     entry = {'id': identifier, 'label': label, 'kind': kind,
              'position': [position[0], position[1]], 'size': list(size), 'details': details}
     if heading is not None:
         entry['heading'] = round(heading, 4)
+    if model is not None:
+        entry['model'] = model
+    if interior is not None:
+        entry['interior'] = interior
     return entry
 
 
@@ -788,27 +875,28 @@ def cruise_terminal_scene(state):
     config = terminal['config']
     objects = [_scene_object('cruise_terminal_building', 'Northstar Cruise Terminal', 'building',
                              [26350, 22500], [260, 16, 110],
-                             'Terminal building serving all cruise calls; passenger halls listed below.')]
-    for identifier, label, position, size, details in SCENE_AMENITIES:
-        objects.append(_scene_object(identifier, label, 'building', position, size, details))
+                             _rows(halls=len(SCENE_HALLS), note='walkable interior; passenger halls listed below'),
+                             interior={'floors': SCENE_INTERIOR['floors'],
+                                       'rooms': [dict(room) for room in SCENE_INTERIOR['rooms']],
+                                       'doors': [dict(door) for door in SCENE_INTERIOR['doors']],
+                                       'props': _hall_props(config)})]
     objects.append(_scene_object('cruise_wharf', 'Cruise Wharf', 'dock',
                                  [SCENE_WHARF_X, 22500], [40, 6, 1100],
-                                 'Main cruise wharf; berths lie along its east side.'))
+                                 _rows(berths='along the east side')))
     for identifier, label, position, size in SCENE_GANGWAYS:
         objects.append(_scene_object(identifier, label, 'dock', position, size,
-                                     'Covered gangway between the terminal and the wharf.'))
+                                     _rows(link='terminal to wharf')))
     for identifier, label, position, size, details in SCENE_STAGING:
-        objects.append(_scene_object(identifier, label, 'storage', position, size, details))
+        objects.append(_scene_object(identifier, label, 'storage', position, size, _rows(use=details)))
     if config['shuttle_capacity_people'] > 0:
         objects.append(_scene_object('cruise_shuttle_vehicle', 'Terminal Shuttle', 'vehicle',
                                      [26140, 22570], [12, 3, 2.5],
-                                     'Shuttle staged at the bay (authored layout); capacity '
-                                     f"{config['shuttle_capacity_people']} people every "
-                                     f"{config['shuttle_headway_minutes']} minutes.", heading=0.0))
+                                     _rows(status='staged at the bay', capacity_people=config['shuttle_capacity_people'],
+                                           headway_minutes=config['shuttle_headway_minutes']), heading=0.0))
     objects.append(_scene_object('cruise_taxi_vehicle', 'Taxi (staged)', 'vehicle',
                                  [26140, 22430], [5, 1.8, 2],
-                                 f"Taxi staged at the rank (authored layout); one group departs about every "
-                                 f"{config['taxi_interval_seconds']} seconds uncongested.", heading=0.0))
+                                 _rows(status='staged at the rank', dispatch_interval_seconds=config['taxi_interval_seconds']),
+                                 heading=0.0))
     for visit in terminal['visits']:
         if visit['status'] in SCENE_STATUS_LABELS and visit['berth'] is not None:
             size = SCENE_SHIP_SIZES.get(visit['berth'], [55, 20, 260])
@@ -817,20 +905,25 @@ def cruise_terminal_scene(state):
             details = (f"{SCENE_STATUS_LABELS[visit['status']]} at berth {visit['berth']}; "
                        f"{ashore} passengers ashore, {visit['boarded_people']} aboard, "
                        f"{visit['missed_people']} missed, departs {_iso(visit['departure_ts'])[11:16]}.")
-            objects.append(_scene_object(f"cruise_ship_berth_{visit['berth']}", visit['ship'], 'vehicle',
-                                         position, size, details, heading=0.0))
+            objects.append(_scene_object(f"cruise_ship_berth_{visit['berth']}", visit['ship'], 'vessel',
+                                         position, size, _rows(
+                                             status=SCENE_STATUS_LABELS[visit['status']], berth=visit['berth'],
+                                             passengers_ashore=ashore, aboard=visit['boarded_people'],
+                                             missed=visit['missed_people'],
+                                             departure=_iso(visit['departure_ts'])[11:16]),
+                                         heading=0.0, model='cruise_ship'))
         elif visit['status'] == 'holding':
-            objects.append(_scene_object('cruise_ship_holding', visit['ship'], 'vehicle',
+            objects.append(_scene_object('cruise_ship_holding', visit['ship'], 'vessel',
                                          SCENE_HOLDING_XY, [55, 20, 260],
-                                         'Holding outside the harbour; awaiting a free berth.', heading=0.0))
+                                         _rows(status='Holding outside the harbour', note='awaiting a free berth'),
+                                         heading=0.0, model='cruise_ship'))
     for destination_id, destination in DESTINATIONS.items():
         place = PLACE_INDEX[destination_id]
         objects.append(_scene_object(
             f"cruise_destination_{destination_id}", destination['name'], 'building',
             [place['x'], place['y']], [80, 10, 60],
-            f"City destination at its shared venue anchor; capacity {destination['capacity']} visitors, "
-            f"{_occupancy(terminal, destination_id)} on site now, "
-            f"{terminal['totals']['visitors_by_destination'].get(destination_id, 0)} visitors this run."))
+            _rows(capacity_visitors=destination['capacity'], on_site_now=_occupancy(terminal, destination_id),
+                  visitors_this_run=terminal['totals']['visitors_by_destination'].get(destination_id, 0))))
     roads = [{'id': identifier, 'points': [list(point) for point in points]}
              for identifier, points in SCENE_ROADS]
     for destination_id in DESTINATIONS:
@@ -838,7 +931,7 @@ def cruise_terminal_scene(state):
         stride = max(1, len(points) // 60)
         roads.append({'id': f"cruise_route_{destination_id}",
                       'points': [[point[0], point[1]] for point in points[::stride]]})
-    return {'schema_version': SCENE_CONTRACT, 'units': 'm', 'synthetic': True,
+    return {'contract': SCENE_CONTRACT, 'units': 'm', 'synthetic': True,
             'geometry_note': SCENE_GEOMETRY_NOTE,
             'objects': objects[:SCENE_OBJECT_LIMIT],
             'roads': roads}
